@@ -5,7 +5,6 @@ import { validateObjID } from "./objectId.validation.js";
 
 export const generalFields = {
   // User
-
   bio: joi.string().trim().max(fieldOptions.bioLength.max),
   userName: joi
     .string()
@@ -20,10 +19,16 @@ export const generalFields = {
     .max(fieldOptions.passwordLength.max),
   phone: joi.string().pattern(regex.phoneRegEx),
 
+  // OTP
   otp: joi.string().max(fieldOptions.otpLength.max),
 
-  token: joi.string().custom(validateObjID),
+  // Token
+  token: joi.string(),
 
+  // ObjID
+  id: joi.string().custom(validateObjID),
+
+  // Files
   file: {
     fieldname: joi.string().required(),
     originalname: joi.string().required(),
@@ -33,14 +38,12 @@ export const generalFields = {
     path: joi.string().required(),
     size: joi.number().required(),
   },
-
   fileType: {
     mimetype: joi.string(),
   },
-
   files: joi.array().items(joi.ref("file")),
 
-  // Post
-  title: joi.string().trim().min(fieldOptions.titleLength.max),
-  content: joi.string().trim().min(fieldOptions.contentLength.max),
+  // Post & Comment
+  title: joi.string().trim().max(fieldOptions.titleLength.max),
+  content: joi.string().trim().max(fieldOptions.contentLength.max),
 };

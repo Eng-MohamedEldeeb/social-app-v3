@@ -4,18 +4,15 @@ import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 
 const postSchema = new Schema(
   {
-    picture: {
+    postPicture: {
       secure_url: String,
       public_id: String,
-      required: function () {
-        return this.title || this.content ? false : true;
-      },
     },
 
     title: {
       type: String,
       required: function () {
-        return this.picture.secure_url || this.content ? false : true;
+        return this.postPicture.secure_url || this.content ? false : true;
       },
 
       maxlength: [
@@ -33,7 +30,7 @@ const postSchema = new Schema(
     content: {
       type: String,
       requried: function () {
-        return this.picture.secure_url || this.title ? false : true;
+        return this.postPicture.secure_url || this.title ? false : true;
       },
 
       maxlength: [
@@ -55,6 +52,8 @@ const postSchema = new Schema(
       ref: "user",
       required: [true, generateMessage("Post's Owner").errors.required.error],
     },
+
+    isArchived: Boolean,
   },
   {
     timestamps: true,

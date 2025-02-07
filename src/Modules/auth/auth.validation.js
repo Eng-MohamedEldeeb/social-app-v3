@@ -1,15 +1,15 @@
 import joi from "joi";
-import { generalFields } from "../../Utils/Validations/validators/general.fields.js";
+import { generalFields } from "../../Utils/Validation/validators/general.fields.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
-export const confirmEmailSchema = joi
+export const confirmEmail = joi
   .object()
   .keys({
     email: generalFields.email.required(),
   })
   .required();
 
-export const registerSchema = joi
+export const register = joi
   .object()
   .keys({
     userName: generalFields.userName.required(),
@@ -29,7 +29,7 @@ export const registerSchema = joi
   })
   .required();
 
-export const loginSchema = joi
+export const login = joi
   .object()
   .keys({
     userName: generalFields.userName.required(),
@@ -37,14 +37,14 @@ export const loginSchema = joi
   })
   .required();
 
-export const forgotPasswordSchema = joi
+export const forgotPassword = joi
   .object()
   .keys({
     email: generalFields.email.required(),
   })
   .required();
 
-export const resetPasswordSchema = joi
+export const resetPassword = joi
   .object()
   .keys({
     email: generalFields.email.required(),

@@ -1,9 +1,9 @@
 import { Router } from "express";
 import * as authService from "./service/auth.service.js";
 import * as authSelection from "./auth.select.js";
+import * as authValidators from "./auth.validation.js";
 import { isExisted } from "../../Middlewares/auth/isExisted.js";
-import * as authValidation from "./auth.validation.js";
-import { validation } from "../../Utils/Validations/validation.js";
+import { validation } from "../../Utils/Validation/validation.js";
 import { fileReader } from "../../Utils/Upload/fileReader.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
@@ -19,7 +19,7 @@ const router = Router();
  **/
 router.post(
   "/confirm-email",
-  validation({ schema: authValidation.confirmEmailSchema }),
+  validation({ schema: authValidators.confirmEmail }),
   isExisted({ options: { projection: authSelection.confirmEmail.projection } }),
   authService.confirmEmail
 );
@@ -33,7 +33,7 @@ router.post(
   "/register",
   fileReader({ fileType: fileTypes.img }).single("avatar"),
   validation({
-    schema: authValidation.registerSchema,
+    schema: authValidators.register,
     otp: "registeration",
   }),
   validateOTP({ otpType: otpTypes.confirmation, otpName: "registeration" }),
@@ -47,7 +47,7 @@ router.post(
  **/
 router.post(
   "/login",
-  validation({ schema: authValidation.loginSchema }),
+  validation({ schema: authValidators.login }),
   authService.login
 );
 
@@ -58,7 +58,7 @@ router.post(
  **/
 router.post(
   "/forgot-password",
-  validation({ schema: authValidation.forgotPasswordSchema }),
+  validation({ schema: authValidators.forgotPassword }),
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
   }),
@@ -73,7 +73,7 @@ router.post(
 router.put(
   "/reset-password",
   validation({
-    schema: authValidation.resetPasswordSchema,
+    schema: authValidators.resetPassword,
     otp: "reset-password",
   }),
   validateOTP({ otpType: otpTypes.resetPassword, otpName: "reset-password" }),

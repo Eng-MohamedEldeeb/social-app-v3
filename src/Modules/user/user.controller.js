@@ -1,10 +1,10 @@
 import { Router } from "express";
 import * as userService from "./services/user.service.js";
-import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
-import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import * as userSelection from "./user.select.js";
 import * as userValidation from "./user.validation.js";
-import { validation } from "../../Utils/Validations/validation.js";
+import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
+import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
+import { validation } from "../../Utils/Validation/validation.js";
 import { fileReader } from "../../Utils/Upload/fileReader.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
@@ -61,7 +61,8 @@ router.patch(
   "/profile/edit",
   fileReader({ fileType: fileTypes.img }).single("avatar"),
   validation({
-    schema: userValidation.updateProfileSchema,
+    schema: userValidation.updateProfile,
+    token: "authorization",
   }),
   isAuthorized,
   isAuthenticated({

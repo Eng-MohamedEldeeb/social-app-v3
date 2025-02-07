@@ -3,7 +3,10 @@ export const validateField = (regex) => {
     return regex.test(v);
   };
 };
-
+export const roles = {
+  admin: "admin",
+  user: "user",
+};
 export const otpTypes = {
   greeting: "greeting",
   confirmation: "confirmation",

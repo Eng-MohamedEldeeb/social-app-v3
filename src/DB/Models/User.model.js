@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types, model } from "mongoose";
-import * as regex from "../../Utils/Validations/validators/regex.patterns.js";
+import * as regex from "../../Utils/Validation/validators/regex.patterns.js";
 import * as fieldOptions from "../Options/field.length.js";
 import * as fieldValidation from "../Options/field.validation.js";
 import { encryptValue, hashValue } from "../../Utils/Security/hash.js";
@@ -130,6 +130,14 @@ const userSchema = new Schema(
         }).max.msg,
       ],
       trim: true,
+    },
+
+    role: {
+      type: String,
+      enum: {
+        values: Object.values(fieldValidation.roles),
+        message: generateMessage().errors.enums.error,
+      },
     },
 
     posts: [{ type: Types.ObjectId, ref: "post" }],

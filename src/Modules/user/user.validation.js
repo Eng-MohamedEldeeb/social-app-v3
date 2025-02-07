@@ -1,8 +1,8 @@
 import joi from "joi";
-import { generalFields } from "../../Utils/Validations/validators/general.fields.js";
+import { generalFields } from "../../Utils/Validation/validators/general.fields.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
-export const updateProfileSchema = joi
+export const updateProfile = joi
   .object()
   .keys({
     bio: generalFields.bio,

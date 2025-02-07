@@ -6,6 +6,7 @@ export const validation = ({
   token = false,
   query = false,
   otp = false,
+  _id = false,
 }) => {
   return asnycHandler((req, res, next) => {
     const values = {
@@ -13,6 +14,7 @@ export const validation = ({
       ...req.params,
       ...(req.file && { file: req.file }),
       ...(token && { [token]: req.headers[token] }),
+      ...(_id && { [_id]: req.token._id }),
       ...(query && { [query]: req.headers[query] }),
       ...(otp && {
         [otp]: req.headers[otp],
@@ -26,7 +28,8 @@ export const validation = ({
     if (error) {
       const errors = error.details.map((error) => {
         return {
-          msg: error.message,
+          msg: "validation Error",
+          reason: error.message,
           path: error.path[0],
           type: error.type,
         };

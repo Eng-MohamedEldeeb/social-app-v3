@@ -4,7 +4,7 @@ import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 // import { hashValue } from "../../Utils/Security/hash.js";
 import sendEmail from "../../Utils/Emails/email.event.js";
 import { emailTypes } from "../../Utils/Emails/Handler/sendEmail.handler.js";
-import { emailRegEx } from "../../Utils/Validations/validators/regex.patterns.js";
+import { emailRegEx } from "../../Utils/Validation/validators/regex.patterns.js";
 import randomstring from "randomstring";
 const optSchema = new Schema(
   {

@@ -1,4 +1,4 @@
-export const generateMessage = (fieldName = "") => {
+export const generateMessage = (fieldName = "", enumValues = []) => {
   return {
     success: {
       sendOTP: {
@@ -12,12 +12,20 @@ export const generateMessage = (fieldName = "") => {
       loggedIn: { msg: `${fieldName} Logged-in Successfully`, status: 200 },
     },
     errors: {
+      // Invalids :
       invalidCredentials: {
         error: "in-valid E-mail or Password!",
         status: 400,
       },
       invalidToken: { error: "in-valid Token!", status: 400 },
       invalidOTP: { error: "in-valid Confirmation Code!", status: 400 },
+      invalidFormate: { error: `In-valid ${fieldName}!`, status: 400 },
+
+      enums: {
+        error: `In-valid Value, value Must Be "${enumValues.join("Or")}"`,
+        status: 400,
+      },
+      // Authintecation :
       unAuthenticated: {
         error: "You are not Authenticated to Procced!",
         status: 403,
@@ -31,7 +39,7 @@ export const generateMessage = (fieldName = "") => {
       codeAlreadySent: {
         error:
           "You Can't Request Another Confirmation Code Until The Old One Expires After 5m",
-        status: 400,
+        status: 429,
       },
       alreadyExist: { error: `${fieldName} Already Exist!`, status: 409 },
       conflictedPasswords: {
@@ -46,8 +54,12 @@ export const generateMessage = (fieldName = "") => {
 
       required: { error: `${fieldName} Is Required!`, status: 403 },
       emptyField: { error: `${fieldName} Can't Be Empty!` },
-      invalidFormate: { error: `In-valid ${fieldName}!`, status: 400 },
       unMatchedPasswords: { error: "Passwords Aren't Matching!", status: 400 },
+
+      notTheOwner: {
+        error: `You're Not The Owner Of The Requseted ${fieldName}`,
+        status: 403,
+      },
     },
   };
 };

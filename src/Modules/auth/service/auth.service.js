@@ -10,6 +10,7 @@ import { otpTypes } from "../../../DB/Options/field.validation.js";
 import { cloudUploader } from "../../../Utils/Upload/Cloudinary/cloudUploader.js";
 import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
+// Confirm E-mail:
 export const confirmEmail = asnycHandler(async (req, res, next) => {
   const { email } = req.body;
   const { msg, status } = generateMessage().success.sendOTP;
@@ -39,6 +40,7 @@ export const confirmEmail = asnycHandler(async (req, res, next) => {
   });
 });
 
+// Register:
 export const register = asnycHandler(async (req, res, next) => {
   const { msg, status } = generateMessage("User").success.created;
 
@@ -64,6 +66,7 @@ export const register = asnycHandler(async (req, res, next) => {
   });
 });
 
+// Login:
 export const login = asnycHandler(async (req, res, next) => {
   const { password, email, userName, phone } = req.body;
 
@@ -105,6 +108,7 @@ export const login = asnycHandler(async (req, res, next) => {
   });
 });
 
+// Forgot Password:
 export const forgotPassword = asnycHandler(async (req, res, next) => {
   const { email } = req.body;
   const successMsg = generateMessage().success.sendOTP;
@@ -133,6 +137,7 @@ export const forgotPassword = asnycHandler(async (req, res, next) => {
   });
 });
 
+// Reset Password:
 export const resetPassword = asnycHandler(async (req, res, next) => {
   const { email, newPassword } = req.body;
   const { passwords } = req.user;
