@@ -1,3 +1,4 @@
+import Comment from "../../../DB/Models/Comment.model.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
@@ -5,9 +6,16 @@ import { cloudUploader } from "../../../Utils/Upload/Cloudinary/cloudUploader.js
 import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
 // Get All Posts:
-export const getAllComments = asnycHandler(async (req, res, next) => {
+export const getPostComments = asnycHandler(async (req, res, next) => {
+  const { postID } = req.params;
   // GET All Comments From DataBase :
-  const data = await Comment.find();
+  const data = await Comment.find(
+    { post: postID },
+    { commentPicture: { public_id: 0 } },
+    {
+      populate: [{ path: "owner", select: "userName" }],
+    }
+  );
 
   return successResponse(res, {
     ...((data.length == 0 && { msg: "No Comments Yet" }) || { msg: "Done" }),
@@ -40,7 +48,7 @@ export const addComment = asnycHandler(async (req, res, next) => {
   if (req.file) {
     const { public_id, secure_url } = await cloudUploader({
       req,
-      userId: _id,
+      userId: userID,
       folderType: folderTypes.post,
     });
     commentPic = { public_id, secure_url };
@@ -51,7 +59,7 @@ export const addComment = asnycHandler(async (req, res, next) => {
     content,
     owner: userID,
     post: postID,
-    ...(commentPic.public_id && { postPicture: commentPic }),
+    ...(commentPic.public_id && { commentPicture: commentPic }),
   });
 
   return successResponse(res, {

@@ -3,7 +3,7 @@ import * as fieldOptions from "../Options/field.length.js";
 
 const commentSchema = new Schema(
   {
-    picture: {
+    commentPicture: {
       secure_url: String,
       public_id: String,
     },

@@ -1,6 +1,11 @@
 // Get Single Post Selection :
 export const getSingleComment = {
   commentAuthentication: {
+    projection: {
+      commentPicture: {
+        public_id: 0,
+      },
+    },
     populate: {
       path: "owner",
       select: {

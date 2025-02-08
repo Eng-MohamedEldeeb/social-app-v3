@@ -11,14 +11,14 @@ import { postAuthentication } from "../../Middlewares/post/postAuthentication.js
 import { postAuthorization } from "../../Middlewares/post/postAuthorization.js";
 import commentRouter from "./../comment/comment.controller.js";
 
-const router = Router({ mergeParams: true });
+const router = Router();
 
 /**
  * @link /:postID/comment
  * @description Route To Comments Router
  **/
 router.use(
-  "/:postID",
+  "/:postID/comments",
   isAuthorized,
   isAuthenticated({
     options: {
@@ -56,6 +56,10 @@ router.get(
  **/
 router.get(
   "/:postID",
+  validation({
+    schema: postValidators.getSinglePost,
+    token: "authorization",
+  }),
   isAuthorized,
   isAuthenticated({
     options: {
@@ -68,10 +72,7 @@ router.get(
       populate: postSelection.getSinglePost.postAuthentication.populate,
     },
   }),
-  validation({
-    schema: postValidators.getSinglePost,
-    token: "authorization",
-  }),
+
   postService.getSinglePost
 );
 

@@ -9,6 +9,7 @@ export const getSingleComment = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
+    postID: generalFields.id.required(),
     commentID: generalFields.id.required(),
   })
   .required();
@@ -24,12 +25,10 @@ export const addComment = joi
     }),
 
     content: generalFields.content,
-    owner: generalFields.id.required(),
-    post: generalFields.id.required(),
 
     // Params:
     postID: generalFields.id.required(),
-
+    owner: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
   })
@@ -40,7 +39,7 @@ export const editComment = joi
   .object()
   .keys({
     // Comment:
-    content: generalFields.content,
+    content: generalFields.content.required(),
     owner: generalFields.id.required(),
 
     // Token:

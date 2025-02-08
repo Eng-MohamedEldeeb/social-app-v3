@@ -8,14 +8,14 @@ import { validation } from "../../Utils/Validation/validation.js";
 import { commentAuthentication } from "../../Middlewares/comment/commentAuthentication.js";
 import { commentAuthorization } from "../../Middlewares/comment/commentAuthorization.js";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 /**
  * @method GET
  * @link /
- * @description GET All Comments
+ * @description GET All Post's Comments
  **/
-router.get("/", commentService.getAllComments);
+router.get("/all", commentService.getPostComments);
 
 /**
  * @method GET
@@ -25,16 +25,17 @@ router.get("/", commentService.getAllComments);
  **/
 router.get(
   "/:commentID",
+  validation({
+    schema: commentValidators.getSingleComment,
+    token: "authorization",
+  }),
   commentAuthentication({
     options: {
       projection:
         commentSelection.getSingleComment.commentAuthentication.projection,
+      populate:
+        commentSelection.getSingleComment.commentAuthentication.populate,
     },
-  }),
-
-  validation({
-    schema: commentValidators.getSingleComment,
-    token: "authorization",
   }),
   commentService.getSingleComment
 );
@@ -45,7 +46,7 @@ router.get(
  * @description Add Comment
  **/
 router.post(
-  "/",
+  "/add",
   fileReader({ fileType: fileTypes.img }).single("img"),
   validation({
     schema: commentValidators.addComment,
@@ -56,12 +57,12 @@ router.post(
 );
 
 /**
- * @method PATCH
+ * @method PUT
  * @link /comment/edit/:commentID
  * @param /:commentID
  * @description Edit Comment
  **/
-router.patch(
+router.put(
   "/edit/:commentID",
   commentAuthentication({
     options: {
