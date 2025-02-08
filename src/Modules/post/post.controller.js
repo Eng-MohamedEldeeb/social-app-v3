@@ -192,7 +192,7 @@ router.delete(
     },
   }),
   postAuthentication({
-    archivedField: true,
+    archivedField: false,
     options: {
       projection: postSelection.deletePost.postAuthentication.projection,
     },

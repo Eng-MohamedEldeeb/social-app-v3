@@ -1,6 +1,7 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 import * as fieldOptions from "../Options/field.length.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
+import Comment from "./Comment.model.js";
 
 const postSchema = new Schema(
   {
@@ -61,6 +62,11 @@ const postSchema = new Schema(
     skipVersioning: true,
   }
 );
+
+postSchema.post("findOneAndDelete", async function (doc, next) {
+  const postID = doc._id;
+  await Comment.deleteMany({ post: postID });
+});
 
 const Post = mongoose.models.Post || model("post", postSchema);
 

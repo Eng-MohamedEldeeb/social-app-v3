@@ -8,6 +8,7 @@ import randomstring from "randomstring";
 import sendEmail from "../../Utils/Emails/email.event.js";
 import OTP from "./OTP.model.js";
 import { emailTypes } from "../../Utils/Emails/Handler/sendEmail.handler.js";
+import Post from "./Post.model.js";
 
 const userSchema = new Schema(
   {
@@ -194,6 +195,10 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   return next();
 });
 
+userSchema.post("findOneAndDelete", async function (doc, next) {
+  const userID = doc._id;
+  await Post.deleteMany({ owner: userID });
+});
 const User = mongoose.models.User || model("user", userSchema);
 
 export default User;

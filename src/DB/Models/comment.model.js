@@ -39,6 +39,11 @@ const commentSchema = new Schema(
   }
 );
 
+commentSchema.post("findOneAndDelete", async function (doc, next) {
+  const commentID = doc._id;
+  await mongoose.models.Comment.deleteMany({ replyingTo: commentID });
+});
+
 const Comment = mongoose.models.Comment || model("comment", commentSchema);
 
 export default Comment;

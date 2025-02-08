@@ -93,6 +93,9 @@ export const deletePost = {
       _id: 1,
       owner: 1,
       isArchived: 1,
+      attachment: {
+        public_id: 1,
+      },
     },
   },
 };
