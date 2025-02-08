@@ -14,6 +14,7 @@ export const validation = ({
       ...req.params,
       ...(req.file && { file: req.file }),
       ...(token && { [token]: req.headers[token] }),
+         // Unnecessary Step
       ...(_id && { [_id]: req.token._id }),
       ...(query && { [query]: req.headers[query] }),
       ...(otp && {
