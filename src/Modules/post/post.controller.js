@@ -9,12 +9,34 @@ import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import { postAuthentication } from "../../Middlewares/post/postAuthentication.js";
 import { postAuthorization } from "../../Middlewares/post/postAuthorization.js";
+import commentRouter from "./../comment/comment.controller.js";
 
-const router = Router();
+const router = Router({ mergeParams: true });
+
+/**
+ * @link /:postID/comment
+ * @description Route To Comments Router
+ **/
+router.use(
+  "/:postID",
+  isAuthorized,
+  isAuthenticated({
+    options: {
+      projection: postSelection.commentRouter.isAuthenticated.projection,
+    },
+  }),
+  postAuthentication({
+    options: {
+      projection: postSelection.commentRouter.postAuthentication.projection,
+    },
+    archivedField: false,
+  }),
+  commentRouter
+);
 
 /**
  * @method GET
- * @link /post
+ * @link /
  * @description GET All Posts
  **/
 router.get(
@@ -207,10 +229,10 @@ router.post(
       projection: postSelection.postLike.postAuthentication.projection,
     },
   }),
-  // validation({
-  //   schema: postValidators.postLike,
-  //   token: "authorization",
-  // }),
+  validation({
+    schema: postValidators.postLike,
+    token: "authorization",
+  }),
   postService.postLike
 );
 

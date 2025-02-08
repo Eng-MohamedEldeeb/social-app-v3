@@ -1,4 +1,4 @@
-import Post from "../../../DB/Models/post.model.js";
+import Post from "../../../DB/Models/Post.model.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
@@ -7,7 +7,7 @@ import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.o
 
 // Get All Posts:
 export const getAllPosts = asnycHandler(async (req, res, next) => {
-  // Add Post to DataBase
+  // GET All Posts From DataBase:
   const data = await Post.find({ isArchived: { $exists: false } });
 
   return successResponse(res, {
@@ -128,6 +128,7 @@ export const restorePost = asnycHandler(async (req, res, next) => {
   });
 });
 
+// Delete Post:
 export const deletePost = asnycHandler(async (req, res, next) => {
   // Post's Id :
   const { postID } = req.params;

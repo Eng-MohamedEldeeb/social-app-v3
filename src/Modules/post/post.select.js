@@ -1,3 +1,17 @@
+// Edit Post Selection :
+export const commentRouter = {
+  isAuthenticated: {
+    projection: {
+      _id: 1,
+    },
+  },
+  postAuthentication: {
+    projection: {
+      _id: 1,
+    },
+  },
+};
+
 // Get Single Post Selection :
 export const getSinglePost = {
   isAuthenticated: { projection: { _id: 1 } },

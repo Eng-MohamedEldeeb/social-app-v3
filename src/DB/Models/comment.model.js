@@ -8,22 +8,6 @@ const commentSchema = new Schema(
       public_id: String,
     },
 
-    title: {
-      type: String,
-      requried: true,
-
-      maxlength: [
-        fieldOptions.fieldLength({
-          fieldName: "Post Title",
-          max: fieldOptions.titleLength.max,
-        }).max.value,
-        fieldOptions.fieldLength({
-          fieldName: "Post Title",
-          max: fieldOptions.titleLength.max,
-        }).max.msg,
-      ],
-    },
-
     content: {
       type: String,
       requried: function () {

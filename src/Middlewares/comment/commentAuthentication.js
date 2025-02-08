@@ -1,25 +1,20 @@
-import Post from "../../DB/Models/Post.model";
+import Comment from "../../DB/Models/Comment.model.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";
 
-export const postAuthentication = ({
+export const commentAuthentication = ({
   select = "",
   options = { projection, populate },
-  archivedField = false,
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { postID } = { ...req.params, ...req.query };
+    const { commentID } = { ...req.params, ...req.query };
 
-    // Search For The Requseted Post :
-    const postData = await Post.findOne(
-      { _id: postID, isArchived: { $exists: archivedField } },
-      select,
-      options
-    );
+    // Search For The Requseted Comment :
+    const commentData = await Comment.findById(commentID, select, options);
 
     //! If The Post Wasn't Found :
-    if (!postData)
+    if (!commentData)
       return errorResponse(
         { next },
         {
@@ -28,7 +23,7 @@ export const postAuthentication = ({
         }
       );
 
-    req.post = postData;
+    req.comment = commentData;
     return next();
   });
 };
