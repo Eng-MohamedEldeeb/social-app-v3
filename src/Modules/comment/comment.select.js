@@ -1,8 +1,17 @@
-// Get Single Post Selection :
+// Edit Post Selection :
+export const replyRouter = {
+  commentAuthentication: {
+    projection: {
+      _id: 1,
+    },
+  },
+};
+
+// Get Single Comment Selection :
 export const getSingleComment = {
   commentAuthentication: {
     projection: {
-      commentPicture: {
+      attachment: {
         public_id: 0,
       },
     },

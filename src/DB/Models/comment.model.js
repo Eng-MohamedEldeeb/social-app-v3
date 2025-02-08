@@ -3,7 +3,7 @@ import * as fieldOptions from "../Options/field.length.js";
 
 const commentSchema = new Schema(
   {
-    commentPicture: {
+    attachment: {
       secure_url: String,
       public_id: String,
     },
@@ -27,13 +27,15 @@ const commentSchema = new Schema(
     },
 
     likedBy: [{ type: Types.ObjectId, ref: "user" }],
-    replies: [{ type: Types.ObjectId, ref: "comment" }],
 
-    post: { type: Types.ObjectId, ref: "post" },
     owner: { type: Types.ObjectId, ref: "user" },
+    post: { type: Types.ObjectId, ref: "post" },
+    replyingTo: { type: Types.ObjectId, ref: "Comment" },
   },
   {
     timestamps: true,
+    versionKey: false,
+    skipVersioning: true,
   }
 );
 

@@ -11,7 +11,7 @@ export const getPostComments = asnycHandler(async (req, res, next) => {
   // GET All Comments From DataBase :
   const data = await Comment.find(
     { post: postID },
-    { commentPicture: { public_id: 0 } },
+    { attachment: { public_id: 0 } },
     {
       populate: [{ path: "owner", select: "userName" }],
     }
@@ -43,7 +43,7 @@ export const addComment = asnycHandler(async (req, res, next) => {
   const { content } = req.body;
 
   // Comment's Picture:
-  let commentPic = {};
+  let attachment = {};
 
   if (req.file) {
     const { public_id, secure_url } = await cloudUploader({
@@ -51,15 +51,15 @@ export const addComment = asnycHandler(async (req, res, next) => {
       userId: userID,
       folderType: folderTypes.comment,
     });
-    commentPic = { public_id, secure_url };
+    attachment = { public_id, secure_url };
   }
 
-  // Add opmment to DataBase
+  // Add Comment to DataBase
   const data = await Comment.create({
     content,
     owner: userID,
     post: postID,
-    ...(commentPic.public_id && { commentPicture: commentPic }),
+    ...(attachment.public_id && { attachment }),
   });
 
   return successResponse(res, {

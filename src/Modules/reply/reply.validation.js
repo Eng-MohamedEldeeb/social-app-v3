@@ -1,9 +1,8 @@
 import joi from "joi";
 import { generalFields } from "../../Utils/Validation/validators/general.fields.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
-// Get Single Comment Validation :
-export const getSingleComment = joi
+// Get Single Reply Validation :
+export const getSingleReply = joi
   .object()
   .keys({
     ["authorization"]: generalFields.token.required(),
@@ -11,34 +10,29 @@ export const getSingleComment = joi
     // Params:
     postID: generalFields.id.required(),
     commentID: generalFields.id.required(),
+    replyID: generalFields.id.required(),
   })
   .required();
 
-// Add Comment Validation :
-export const addComment = joi
+// Add Reply Validation :
+export const addReply = joi
   .object()
   .keys({
-    // Post:
-    file: joi.object().keys({
-      ...generalFields.file,
-      mimetype: generalFields.fileType.mimetype.valid(...fileTypes.img),
-    }),
-
-    content: generalFields.content,
+    content: generalFields.content.required(),
 
     // Params:
     postID: generalFields.id.required(),
-
+    commentID: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
   })
-  .or("content", "file");
+  .required();
 
-// Edit Comment Validation :
-export const editComment = joi
+// Edit Reply Validation :
+export const editReply = joi
   .object()
   .keys({
-    // Comment:
+    // Reply:
     content: generalFields.content.required(),
 
     // Token:
@@ -47,11 +41,12 @@ export const editComment = joi
     // Params:
     postID: generalFields.id.required(),
     commentID: generalFields.id.required(),
+    replyID: generalFields.id.required(),
   })
   .required();
 
 // Delete Comment Validation :
-export const deleteComment = joi
+export const deleteReply = joi
   .object()
   .keys({
     // Token:
@@ -59,11 +54,12 @@ export const deleteComment = joi
     // Params:
     postID: generalFields.id.required(),
     commentID: generalFields.id.required(),
+    replyID: generalFields.id.required(),
   })
   .required();
 
-// Like Comment Validation :
-export const commentLike = joi
+// Like Reply Validation :
+export const replyLike = joi
   .object()
   .keys({
     // Token:
@@ -72,5 +68,6 @@ export const commentLike = joi
     // Params:
     postID: generalFields.id.required(),
     commentID: generalFields.id.required(),
+    replyID: generalFields.id.required(),
   })
   .required();

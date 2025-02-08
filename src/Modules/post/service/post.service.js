@@ -8,7 +8,15 @@ import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.o
 // Get All Posts:
 export const getAllPosts = asnycHandler(async (req, res, next) => {
   // GET All Posts From DataBase:
-  const data = await Post.find({ isArchived: { $exists: false } });
+  const data = await Post.find(
+    { isArchived: { $exists: false } },
+    {
+      attachment: {
+        public_id: 0,
+      },
+    },
+    { lean: true }
+  );
 
   return successResponse(res, {
     ...((data.length == 0 && { msg: "No Posts Yet" }) || { msg: "Done" }),
@@ -35,7 +43,7 @@ export const addPost = asnycHandler(async (req, res, next) => {
   const postData = req.body;
 
   // Post's Picture:
-  let postPic = {};
+  let attachment = {};
 
   if (req.file) {
     const { public_id, secure_url } = await cloudUploader({
@@ -43,14 +51,14 @@ export const addPost = asnycHandler(async (req, res, next) => {
       userId: _id,
       folderType: folderTypes.post,
     });
-    postPic = { public_id, secure_url };
+    attachment = { public_id, secure_url };
   }
 
   // Add Post to DataBase
   const data = await Post.create({
     ...postData,
     owner: _id,
-    ...(postPic.public_id && { postPicture: postPic }),
+    ...(attachment.public_id && { attachment }),
   });
 
   return successResponse(res, {

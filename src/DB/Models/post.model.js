@@ -4,7 +4,7 @@ import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 
 const postSchema = new Schema(
   {
-    postPicture: {
+    attachment: {
       secure_url: String,
       public_id: String,
     },
@@ -12,7 +12,7 @@ const postSchema = new Schema(
     title: {
       type: String,
       required: function () {
-        return this.postPicture.secure_url || this.content ? false : true;
+        return this.attachment.secure_url || this.content ? false : true;
       },
 
       maxlength: [
@@ -30,7 +30,7 @@ const postSchema = new Schema(
     content: {
       type: String,
       requried: function () {
-        return this.postPicture.secure_url || this.title ? false : true;
+        return this.attachment.secure_url || this.title ? false : true;
       },
 
       maxlength: [
@@ -57,6 +57,8 @@ const postSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
+    skipVersioning: true,
   }
 );
 

@@ -24,7 +24,6 @@ export const addPost = joi
     }),
     title: generalFields.title,
     content: generalFields.content,
-    owner: generalFields.id.required(),
 
     // Token:
     ["authorization"]: generalFields.token.required(),
@@ -38,7 +37,6 @@ export const editPost = joi
     // Post:
     title: generalFields.title,
     content: generalFields.content,
-    owner: generalFields.id.required(),
 
     // Token:
     ["authorization"]: generalFields.token.required(),
@@ -52,8 +50,6 @@ export const editPost = joi
 export const archivePost = joi
   .object()
   .keys({
-    // Post:
-    owner: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
@@ -65,8 +61,6 @@ export const archivePost = joi
 export const restorePost = joi
   .object()
   .keys({
-    // Post:
-    owner: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
@@ -78,8 +72,6 @@ export const restorePost = joi
 export const deletePost = joi
   .object()
   .keys({
-    // Post:
-    owner: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:

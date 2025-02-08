@@ -4,7 +4,11 @@ import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";
 
 export const postAuthentication = ({
-  select = "",
+  select = {
+    attachment: {
+      public_id: 0,
+    },
+  },
   options = { projection, populate },
   archivedField = false,
 } = {}) => {

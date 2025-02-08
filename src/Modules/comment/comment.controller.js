@@ -7,8 +7,16 @@ import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.option
 import { validation } from "../../Utils/Validation/validation.js";
 import { commentAuthentication } from "../../Middlewares/comment/commentAuthentication.js";
 import { commentAuthorization } from "../../Middlewares/comment/commentAuthorization.js";
-
+import replyRouter from "../reply/replie.controller.js";
 const router = Router({ mergeParams: true });
+
+router.use(
+  "/:commentID/replies",
+  commentAuthentication({
+    options: commentSelection.replyRouter.commentAuthentication.projection,
+  }),
+  replyRouter
+);
 
 /**
  * @method GET
