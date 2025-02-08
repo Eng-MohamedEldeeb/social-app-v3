@@ -91,7 +91,6 @@ router.post(
   validation({
     schema: postValidators.addPost,
     token: "authorization",
-    _id: "owner",
   }),
   postService.addPost
 );
@@ -118,7 +117,6 @@ router.patch(
   validation({
     schema: postValidators.editPost,
     token: "authorization",
-    _id: "owner",
   }),
   postService.editPost
 );
@@ -147,7 +145,6 @@ router.delete(
   validation({
     schema: postValidators.archivePost,
     token: "authorization",
-    _id: "owner",
   }),
   postService.archivePost
 );
@@ -176,7 +173,6 @@ router.put(
   validation({
     schema: postValidators.restorePost,
     token: "authorization",
-    _id: "owner",
   }),
   postService.restorePost
 );
@@ -205,7 +201,6 @@ router.delete(
   validation({
     schema: postValidators.deletePost,
     token: "authorization",
-    _id: "owner",
   }),
   postService.deletePost
 );

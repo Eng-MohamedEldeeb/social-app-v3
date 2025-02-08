@@ -49,7 +49,7 @@ export const addComment = asnycHandler(async (req, res, next) => {
     const { public_id, secure_url } = await cloudUploader({
       req,
       userId: userID,
-      folderType: folderTypes.post,
+      folderType: folderTypes.comment,
     });
     commentPic = { public_id, secure_url };
   }

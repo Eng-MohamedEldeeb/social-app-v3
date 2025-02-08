@@ -51,7 +51,6 @@ router.post(
   validation({
     schema: commentValidators.addComment,
     token: "authorization",
-    _id: "owner",
   }),
   commentService.addComment
 );
@@ -73,7 +72,6 @@ router.put(
   validation({
     schema: commentValidators.editComment,
     token: "authorization",
-    _id: "owner",
   }),
   commentService.editComment
 );
@@ -96,7 +94,6 @@ router.delete(
   validation({
     schema: commentValidators.deleteComment,
     token: "authorization",
-    _id: "owner",
   }),
   commentService.deleteComment
 );
