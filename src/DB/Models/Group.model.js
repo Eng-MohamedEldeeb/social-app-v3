@@ -15,21 +15,21 @@ const groupSchema = new Schema(
       minlength: [
         fieldOptions.fieldLength({
           fieldName: "Group Name",
-          min: fieldOptions.contentLength.min,
+          min: fieldOptions.groupNameLength.min,
         }).min.value,
         fieldOptions.fieldLength({
           fieldName: "Group Description",
-          max: fieldOptions.contentLength.min,
+          max: fieldOptions.groupNameLength.min,
         }).min.msg,
       ],
       maxlength: [
         fieldOptions.fieldLength({
           fieldName: "Group Name",
-          max: fieldOptions.contentLength.max,
+          max: fieldOptions.groupNameLength.max,
         }).max.value,
         fieldOptions.fieldLength({
           fieldName: "Group Description",
-          max: fieldOptions.contentLength.max,
+          max: fieldOptions.groupNameLength.max,
         }).max.msg,
       ],
       },
@@ -41,11 +41,11 @@ const groupSchema = new Schema(
       maxlength: [
         fieldOptions.fieldLength({
           fieldName: "Group Description",
-          max: fieldOptions.contentLength.max,
+          max: fieldOptions.groupInfoLength.max,
         }).max.value,
         fieldOptions.fieldLength({
           fieldName: "Group Description",
-          max: fieldOptions.contentLength.max,
+          max: fieldOptions.groupInfoLength.max,
         }).max.msg,
       ],
     },
