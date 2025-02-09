@@ -24,6 +24,15 @@ export const contentLength = {
   max: 500,
 };
 
+export const groubNameLength = {
+  min: 4,
+  max: 16,
+};
+
+export const groupInfoLength = {
+  max: 1750,
+};
+
 export const fieldLength = ({ fieldName = "", min = 0, max = 0 } = {}) => {
   return {
     min: {
