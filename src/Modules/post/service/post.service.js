@@ -21,9 +21,10 @@ export const getAllPosts = asnycHandler(async (req, res, next) => {
     { lean: true }
   );
 
-  return successResponse(res, { msg: "Done" ,
+  return successResponse(res, {
+    msg: "Done",
     status: 200,
-    ...(data.length && { data } || {data: "No Posts Yet"}),
+    ...((data.length && { data }) || { data: "No Posts Yet" }),
   });
 });
 
@@ -49,25 +50,26 @@ export const addPost = asnycHandler(async (req, res, next) => {
       req,
       userId: _id,
       folderType: folderTypes.post,
-    }).then((pic)=>{
-const data = await Post.create({
-    ...postData,
-    owner: _id,
-     attachment: {public_id: pic.public_id, secure_url: pic.secure_url},
-  }).catch(err=>{
-return errorResponse({next}, {error: err.message, status: 500})
-});
+    })
+      .then(async (pic) => {
+        const data = await Post.create({
+          ...postData,
+          owner: _id,
+          attachment: { public_id: pic.public_id, secure_url: pic.secure_url },
+        });
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.created.msg,
-    status: generateMessage("Post").success.created.status,
-    data,
-  });
-});
-    
+        return successResponse(res, {
+          msg: generateMessage("Post").success.created.msg,
+          status: generateMessage("Post").success.created.status,
+          data,
+        });
+      })
+      .catch((err) => {
+        return errorResponse({ next }, { error: err.message, status: 500 });
+      });
   }
 
-  // Add Post to DataBase if there was no attachment 
+  // Add Post to DataBase if there was no attachment
   const data = await Post.create({
     ...postData,
     owner: _id,
