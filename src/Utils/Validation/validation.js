@@ -6,7 +6,6 @@ export const validation = ({
   token = false,
   query = false,
   otp = false,
-  _id = false,
 }) => {
   return asnycHandler((req, res, next) => {
     const values = {

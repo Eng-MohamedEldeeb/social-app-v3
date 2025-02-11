@@ -32,6 +32,14 @@ export const resetPassword = ({ email = "", otp = "" } = {}) => {
     text: `To Reset Your Account's Password Use The Code ${otp}`,
   };
 };
+export const changePassword = ({ email = "", otp = "" } = {}) => {
+  return {
+    from: `"Social Media App" <${process.env.EMAIL}>`,
+    to: email,
+    subject: "Change Password Email",
+    text: `To Change Your Account's Password Use The Code ${otp}`,
+  };
+};
 export const deleteAccount = ({ email = "", otp = "" } = {}) => {
   return {
     from: `"Social Media App" <${process.env.EMAIL}>`,

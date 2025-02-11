@@ -9,6 +9,8 @@ import sendEmail from "../../Utils/Emails/email.event.js";
 import OTP from "./OTP.model.js";
 import { emailTypes } from "../../Utils/Emails/Handler/sendEmail.handler.js";
 import Post from "./Post.model.js";
+import cloud from "../../Utils/Upload/Cloudinary/Config/cloud.config.js";
+import Comment from "./Comment.model.js";
 
 const userSchema = new Schema(
   {
@@ -155,7 +157,7 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const hashedPassword = hashValue({ payload: this.password });
     this.password = hashedPassword;
@@ -163,6 +165,8 @@ userSchema.pre("save", function (next) {
   }
   if (this.isModified("phone"))
     this.phone = encryptValue({ payload: this.phone });
+
+  await OTP.findOneAndDelete({ email: this.email });
   return next();
 });
 
@@ -177,21 +181,49 @@ userSchema.pre("findOneAndUpdate", async function (next) {
       passwordChangedAt: Date.now(),
     });
   }
+  if (updatedDoc.phone) {
+    const encryptedphone = encryptValue({ payload: updatedDoc.phone });
+    this.setUpdate({
+      phone: encryptedphone,
+    });
+  }
   if (updatedDoc.tempEmail) {
-    const otp = randomstring.generate({ length: 4, charset: "numeric" });
     const otpType = fieldValidation.otpTypes.confirmNewEmail;
 
-    await OTP.create({ otp, otpType, email: updatedDoc.tempEmail });
+    const otpCode = await OTP.create({
+      otpType,
+      email: updatedDoc.tempEmail,
+    });
+
     this.setUpdate({
+      tempEmail: updatedDoc.tempEmail,
       emailChangedAt: Date.now(),
     });
+
     sendEmail.emit("sendEmail", {
       emailType: emailTypes.verifyEmail,
       email: updatedDoc.tempEmail,
-      otp: otp,
+      otp: otpCode.otp,
     });
   }
   return next();
+});
+
+userSchema.post("findOneAndDelete", async function (doc, next) {
+  const { _id, profilePicture } = doc;
+  const userData = { owner: _id };
+
+  if (
+    profilePicture.public_id !=
+    fieldValidation.defaultValues.profilePicture.public_id
+  )
+    await cloud.uploader.destroy(profilePicture.public_id);
+
+  Promise.allSettled([
+    Post.deleteMany(userData),
+    Comment.deleteMany(userData),
+    OTP.findOneAndDelete({ email: doc.email }),
+  ]);
 });
 
 const User = mongoose.models.User || model("user", userSchema);

@@ -5,58 +5,12 @@ import * as userValidation from "./user.validation.js";
 import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import { validation } from "../../Utils/Validation/validation.js";
-import { fileReader } from "../../Utils/Upload/fileReader.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { userAuthentication } from "../../Middlewares/user/userAuthentication.js";
-import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
-import { otpTypes } from "../../DB/Options/field.validation.js";
+import profileRouter from "./../profile/profile.controller.js";
 
 const router = Router();
 
-/**
- * @method GET
- * @link /user/profile
- * @description Get User's Own Profile
- **/
-router.get(
-  "/profile",
-  isAuthorized,
-  isAuthenticated({
-    options: {
-      projection: userSelection.getProfile.projection,
-      populate: userSelection.getProfile.populate,
-    },
-  }),
-  userService.getProfile
-); //✅
-
-/**
- * @method GET
- * @link /user/profile/followers
- * @description Get User's Own Followers
- **/
-router.get(
-  "/profile/followers",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.getProfileFollowers.projection },
-  }),
-  userService.getProfileFollowers
-); //✅
-
-/**
- * @method GET
- * @link /user/profile/following
- * @description Get User's Own Following
- **/
-router.get(
-  "/profile/following",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.getProfileFollowing.projection },
-  }),
-  userService.getProfileFollowing
-); //✅
+router.use("/profile", profileRouter);
 
 /**
  * @method GET
@@ -122,48 +76,6 @@ router.get(
     },
   }),
   userService.getUserFollowing
-); //✅
-
-/**
- * @method PATCH
- * @link /user/profile/edit
- * @description Edit User's Own Profile
- **/
-router.patch(
-  "/profile/edit",
-  fileReader({ fileType: fileTypes.img }).single("avatar"),
-  validation({
-    schema: userValidation.updateProfile,
-    token: "authorization",
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.updateProfile.projection },
-  }),
-  userService.updateProfile
-); //✅
-
-/**
- * @method PUT
- * @link /user/profile/confirm-new-email
- * @description Confirm User's New E-mail
- **/
-
-router.put(
-  "/profile/confirm-new-email",
-  validation({
-    schema: userValidation.confirmNewEmail,
-    otp: "confirmation-code",
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.confirmNewEmail.projection },
-  }),
-  validateOTP({
-    otpType: otpTypes.confirmNewEmail,
-    otpFieldName: "confirmation-code",
-  }),
-  userService.confirmNewEmail
 ); //✅
 
 /**
@@ -237,87 +149,5 @@ router.delete(
   }),
   userService.unblockUser
 ); //✅
-
-/**
- * @method PATCH
- * @link /user/profile/privacy
- * @description Change User's Own Profile Privacy
- **/
-router.put(
-  "/profile/privacy",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.togglePrivateProfile.projection },
-  }),
-  userService.togglePrivateProfile
-); //✅
-
-/**
- * @method DELETE
- * @link /user/profile
- * @description Delete Account either Forever or only Deacitvate it
- **/
-router.delete(
-  "/profile",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.deleteProfile.projection },
-  }),
-  userService.deleteProfile
-);
-
-/**
- * @method PUT
- * @link /user/profile/2-steps-verification
- * @description Add 2 Steps Verification
- **/
-router.put(
-  "/profile/2-steps-verification",
-
-  validation({
-    schema: userValidation.confirmNewEmail,
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.confirmNewEmail.projection },
-  }),
-  userService.twoStepsVerification
-);
-
-/**
- * @method Post
- * @link /user/profile/change-password
- * @description request Change Password Confirmation
- **/
-router.post(
-  "/profile/change-password",
-
-  validation({
-    schema: userValidation.confirmNewEmail,
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.confirmNewEmail.projection },
-  }),
-  userService.changePassword
-);
-
-/**
- * @method PUT
- * @link /user/profile/change-password
- * @description request Change Password Confirmation
- **/
-router.put(
-  "/profile/new-password",
-
-  validation({
-    schema: userValidation.confirmNewEmail,
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.confirmNewEmail.projection },
-  }),
-  userService.confirmNewPassword
-);
 
 export default router;

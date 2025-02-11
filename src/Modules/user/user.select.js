@@ -1,41 +1,3 @@
-// Get User's Own Profile:
-export const getProfile = {
-  projection: {
-    profilePicture: {
-      public_id: 0,
-    },
-    password: 0,
-    passwords: 0,
-  },
-  populate: {
-    path: "posts",
-    select: {
-      attachment: {
-        public_id: 0,
-      },
-    },
-    options: {
-      sort: {
-        createdAt: -1,
-      },
-    },
-  },
-};
-
-// Get User's Own Profile Followers:
-export const getProfileFollowers = {
-  projection: {
-    followers: 1,
-  },
-};
-
-// Get User's Own Profile Following:
-export const getProfileFollowing = {
-  projection: {
-    following: 1,
-  },
-};
-
 // Get Other User Profile:
 export const getUserProfile = {
   projection: {
@@ -78,25 +40,7 @@ export const getUserFollowing = {
   },
 };
 
-// Update User's Own Profile:
-export const updateProfile = {
-  projection: {
-    _id: 1,
-    profilePicture: 1,
-    isDeactivated: 1,
-  },
-};
-
-// Update User's Own Profile:
-export const confirmNewEmail = {
-  projection: {
-    _id: 1,
-    tempEmail: 1,
-    isDeactivated: 1,
-  },
-};
-
-// Update User's Own Profile:
+// Follow User:
 export const followUser = {
   projection: {
     _id: 1,
@@ -105,7 +49,7 @@ export const followUser = {
   },
 };
 
-// Update User's Own Profile:
+// UnFollow User:
 export const unfollowUser = {
   projection: {
     _id: 1,
@@ -114,7 +58,7 @@ export const unfollowUser = {
   },
 };
 
-// Update User's Own Profile:
+// block user:
 export const blockUser = {
   projection: {
     _id: 1,
@@ -123,27 +67,11 @@ export const blockUser = {
   },
 };
 
-// Update User's Own Profile:
+// Un-block user:
 export const unblockUser = {
   projection: {
     _id: 1,
     blockList: 1,
     isDeactivated: 1,
-  },
-};
-
-// Update User's Own Profile:
-export const togglePrivateProfile = {
-  projection: {
-    _id: 1,
-    privateProfile: 1,
-    isDeactivated: 1,
-  },
-};
-
-// Update User's Own Profile:
-export const deleteProfile = {
-  projection: {
-    _id: 1,
   },
 };

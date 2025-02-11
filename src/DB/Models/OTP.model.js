@@ -47,6 +47,7 @@ optSchema.pre("save", function (next) {
   if (this.isModified("attempts")) return next();
 
   const otpCode = randomstring.generate({ length: 4, charset: "numeric" });
+  this.otp = otpCode;
   const otpType = this.otpType;
 
   sendEmail.emit("sendEmail", {
@@ -54,7 +55,6 @@ optSchema.pre("save", function (next) {
     email: this.email,
     otp: otpCode,
   });
-  this.otp = otpCode;
   return next();
 });
 
