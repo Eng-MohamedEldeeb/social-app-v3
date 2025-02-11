@@ -20,7 +20,7 @@ export const getAllPosts = asnycHandler(async (req, res, next) => {
     { lean: true }
   );
 
-  return successResponse(res, { msg: "Done" },
+  return successResponse(res, { msg: "Done" ,
     status: 200,
     ...(data.length && { data } || {data: "No Posts Yet"}),
   });
