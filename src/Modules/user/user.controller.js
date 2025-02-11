@@ -7,6 +7,9 @@ import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { fileReader } from "../../Utils/Upload/fileReader.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
+import { userAuthentication } from "../../Middlewares/user/userAuthentication.js";
+import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
+import { otpTypes } from "../../DB/Options/field.validation.js";
 
 const router = Router();
 
@@ -19,10 +22,13 @@ router.get(
   "/profile",
   isAuthorized,
   isAuthenticated({
-    options: { projection: userSelection.getProfile.projection },
+    options: {
+      projection: userSelection.getProfile.projection,
+      populate: userSelection.getProfile.populate,
+    },
   }),
   userService.getProfile
-);
+); //✅
 
 /**
  * @method GET
@@ -36,7 +42,7 @@ router.get(
     options: { projection: userSelection.getProfileFollowers.projection },
   }),
   userService.getProfileFollowers
-);
+); //✅
 
 /**
  * @method GET
@@ -50,7 +56,73 @@ router.get(
     options: { projection: userSelection.getProfileFollowing.projection },
   }),
   userService.getProfileFollowing
-);
+); //✅
+
+/**
+ * @method GET
+ * @link /user/profile/following
+ * @description Get User's Own Following
+ **/
+router.get(
+  "/:userID/profile",
+  validation({ schema: userValidation.getUserProfile }),
+  isAuthorized,
+  isAuthenticated({
+    options: {
+      projection: userSelection.getUserProfile.projection.isAuthenticated,
+    },
+  }),
+  userAuthentication({
+    options: {
+      projection: userSelection.getUserProfile.projection.userAuthentication,
+    },
+  }),
+  userService.getUserProfile
+); //✅
+
+/**
+ * @method GET
+ * @link /user/profile/following
+ * @description Get User's Own Following
+ **/
+router.get(
+  "/:userID/followers",
+  validation({ schema: userValidation.getUserFollowers }),
+  isAuthorized,
+  isAuthenticated({
+    options: {
+      projection: userSelection.getUserFollowers.projection.isAuthenticated,
+    },
+  }),
+  userAuthentication({
+    options: {
+      projection: userSelection.getUserFollowers.projection.userAuthentication,
+    },
+  }),
+  userService.getUserFollowers
+); //✅
+
+/**
+ * @method GET
+ * @link /user/profile/following
+ * @description Get User's Own Following
+ **/
+router.get(
+  "/:userID/following",
+  validation({ schema: userValidation.getUserFollowing }),
+  isAuthorized,
+  isAuthenticated({
+    options: {
+      projection: userSelection.getUserFollowing.projection.isAuthenticated,
+    },
+  }),
+  userAuthentication({
+    options: {
+      projection: userSelection.getUserFollowing.projection.userAuthentication,
+    },
+  }),
+  userService.getUserFollowing
+); //✅
 
 /**
  * @method PATCH
@@ -69,56 +141,183 @@ router.patch(
     options: { projection: userSelection.updateProfile.projection },
   }),
   userService.updateProfile
-);
-router.put("/profile/privacy", userService.privateProfile);
-router.put("/profile/2-steps-verification", userService.twoStepsVerification);
-router.put("/profile/change-password", userService.changePassword);
-router.put("/profile/new-password", userService.confirmNewPassword);
-router.put("/profile/change-email", userService.changeEmail);
-router.put("/profile/confirm-new-email", userService.confirmNewEmail);
+); //✅
 
 /**
- * @method DELETE
- * @link /user/profile
- * @description Delete Account either Forever or only Deacitvate it
- * @query /profile?action=permanently || deactivate
+ * @method PUT
+ * @link /user/profile/confirm-new-email
+ * @description Confirm User's New E-mail
  **/
-router.delete("/profile", userService.deleteProfile);
+
+router.put(
+  "/profile/confirm-new-email",
+  validation({
+    schema: userValidation.confirmNewEmail,
+    otp: "confirmation-code",
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.confirmNewEmail.projection },
+  }),
+  validateOTP({
+    otpType: otpTypes.confirmNewEmail,
+    otpFieldName: "confirmation-code",
+  }),
+  userService.confirmNewEmail
+); //✅
 
 /**
  * @method POST
  * @link /user/follow
  * @description Follow User
- * @query /follow?user=userID
+ * @param /follow/:userID
  **/
-router.post("/follow", userService.followUser);
+router.post(
+  "/follow/:userID",
+  validation({
+    schema: userValidation.followUser,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.followUser.projection },
+  }),
+  userService.followUser
+); //✅
 
 /**
  * @method DELETE
  * @link /user/unfollow
  * @description Unfollow User
- * @query /unfollow?user=userID
+ * @param /unfollow/:userID
  **/
-router.delete("/unfollow", userService.unfollowUser);
+router.delete(
+  "/unfollow/:userID",
+  validation({
+    schema: userValidation.unfollowUser,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.unfollowUser.projection },
+  }),
+  userService.unfollowUser
+); //✅
 
 /**
  * @method POST
  * @link /user/block
  * @description Block User
- * @query /block?user=userID
+ * @param /block/:userID
  **/
-router.post("/block", userService.blockUser);
+router.post(
+  "/block/:userID",
+  validation({
+    schema: userValidation.blockUser,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.blockUser.projection },
+  }),
+  userService.blockUser
+); //✅
 
 /**
  * @method DELETE
  * @link /user/unblock
  * @description Unblock User
- * @query /unblock?user=userID
+ * @param /unblock/:userID
  **/
-router.delete("/unblock", userService.unblockUser);
+router.delete(
+  "/unblock/:userID",
+  validation({
+    schema: userValidation.unblockUser,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.unblockUser.projection },
+  }),
+  userService.unblockUser
+); //✅
 
-router.get("/:userId/profile", userService.getUserProfile);
-router.get("/:userId/followers", userService.getUserFollowers);
-router.get("/:userId/following", userService.getUserFollowing);
+/**
+ * @method PATCH
+ * @link /user/profile/privacy
+ * @description Change User's Own Profile Privacy
+ **/
+router.put(
+  "/profile/privacy",
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.togglePrivateProfile.projection },
+  }),
+  userService.togglePrivateProfile
+); //✅
+
+/**
+ * @method DELETE
+ * @link /user/profile
+ * @description Delete Account either Forever or only Deacitvate it
+ **/
+router.delete(
+  "/profile",
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.deleteProfile.projection },
+  }),
+  userService.deleteProfile
+);
+
+/**
+ * @method PUT
+ * @link /user/profile/2-steps-verification
+ * @description Add 2 Steps Verification
+ **/
+router.put(
+  "/profile/2-steps-verification",
+
+  validation({
+    schema: userValidation.confirmNewEmail,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.confirmNewEmail.projection },
+  }),
+  userService.twoStepsVerification
+);
+
+/**
+ * @method Post
+ * @link /user/profile/change-password
+ * @description request Change Password Confirmation
+ **/
+router.post(
+  "/profile/change-password",
+
+  validation({
+    schema: userValidation.confirmNewEmail,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.confirmNewEmail.projection },
+  }),
+  userService.changePassword
+);
+
+/**
+ * @method PUT
+ * @link /user/profile/change-password
+ * @description request Change Password Confirmation
+ **/
+router.put(
+  "/profile/new-password",
+
+  validation({
+    schema: userValidation.confirmNewEmail,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.confirmNewEmail.projection },
+  }),
+  userService.confirmNewPassword
+);
 
 export default router;

@@ -1,4 +1,5 @@
 import Post from "../../../DB/Models/Post.model.js";
+import User from "../../../DB/Models/User.model.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";
@@ -61,6 +62,12 @@ export const addPost = asnycHandler(async (req, res, next) => {
     ...postData,
     owner: _id,
     ...(attachment.public_id && { attachment }),
+  });
+
+  const updatedUser = await User.findByIdAndUpdate(_id, {
+    $push: {
+      posts: data,
+    },
   });
 
   return successResponse(res, {

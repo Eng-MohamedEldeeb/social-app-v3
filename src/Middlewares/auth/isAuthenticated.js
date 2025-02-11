@@ -10,26 +10,12 @@ export const isAuthenticated = ({
   options = { projection, populate },
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { _id, userName, email, userID } = {
-      ...req.body,
-      ...req.query,
-      ...req.token,
-    };
-    let user;
+    const { _id } = req.token;
 
-    if (
-      (userID && Types.ObjectId.isValid(userID)) ||
-      (_id && Types.ObjectId.isValid(_id))
-    )
-      user = await User.findById(_id || userID, select, options).lean();
+    //  const user = await User.findById({_id}).select(select).populate().lean();
+    const user = await User.findById(_id, select, options).lean();
 
-    if (userName || email)
-      user = await User.findOne(
-        { $or: [{ email }, { userName }] },
-        select,
-        options
-      ).lean();
-
+    //! If The User Wasn't Found:
     if (!user) {
       const { error, status } = generateMessage("User").errors.notFound;
       return errorResponse(
@@ -41,7 +27,22 @@ export const isAuthenticated = ({
       );
     }
 
-    if (req.token && req.token.iat < user.passwordChangedAt?.getTime() / 1000) {
+    //! If The User's Account Was Deactivated:
+    if (user.isDeactivated)
+      return errorResponse(
+        { next },
+        {
+          error: generateMessage().errors.unAuthenticated.error,
+          status: generateMessage().errors.unAuthenticated.status,
+        }
+      );
+
+    //! If The Token Was Expired:
+    if (
+      req.token &&
+      (req.token.iat < user.passwordChangedAt?.getTime() / 1000 ||
+        req.token.iat < user.emailChangedAt?.getTime() / 1000)
+    ) {
       const { error, status } = generateMessage().errors.expiredToken;
       return errorResponse({ next }, { error, status });
     }

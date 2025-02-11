@@ -54,12 +54,12 @@ const postSchema = new Schema(
       required: [true, generateMessage("Post's Owner").errors.required.error],
     },
 
+    allowComments: Boolean,
     isArchived: Boolean,
   },
   {
     timestamps: true,
     versionKey: false,
-    skipVersioning: true,
   }
 );
 

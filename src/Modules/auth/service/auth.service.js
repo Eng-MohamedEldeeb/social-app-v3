@@ -68,13 +68,14 @@ export const register = asnycHandler(async (req, res, next) => {
 
 // Login:
 export const login = asnycHandler(async (req, res, next) => {
-  const { password, email, userName, phone } = req.body;
+  const { userName, password } = req.body;
 
   const successMsg = generateMessage("User").success.loggedIn;
   const errorMsg = generateMessage().errors.invalidCredentials;
 
   const user = await User.findOne(
-    { $or: [{ email }, { userName }, { phone }] },
+    // { $or: [{ email }, { userName }, { phone }] },
+    { userName },
     {},
     { projection: { password: 1 } }
   );
@@ -94,11 +95,11 @@ export const login = asnycHandler(async (req, res, next) => {
     );
 
   const accessToken = token.generateToken({
-    payload: { _id: user._id, email, userName },
+    payload: { _id: user._id, userName },
     expiresIn: "5d",
   });
   const refreshToken = token.generateToken({
-    payload: { _id: user._id, email, userName },
+    payload: { _id: user._id, userName },
     expiresIn: "14d",
   });
   return successResponse(res, {

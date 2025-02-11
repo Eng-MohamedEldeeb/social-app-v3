@@ -99,11 +99,7 @@ const userSchema = new Schema(
 
     phone: {
       type: String,
-      unique: [true, generateMessage("Phone Number").errors.alreadyExist.error],
-      required: [
-        true,
-        generateMessage("Phone Number").errors.required.error.error,
-      ],
+      // unique: [true, generateMessage("Phone Number").errors.alreadyExist.error],
       trim: true,
     },
 
@@ -150,12 +146,12 @@ const userSchema = new Schema(
     emailChangedAt: Date,
     passwordChangedAt: Date,
     privateProfile: Boolean,
+    isDeactivated: Boolean,
   },
   {
     timestamps: true,
     // id: false,
     versionKey: false,
-    skipVersioning: true,
   }
 );
 
@@ -181,24 +177,23 @@ userSchema.pre("findOneAndUpdate", async function (next) {
       passwordChangedAt: Date.now(),
     });
   }
-  if (updatedDoc.email) {
+  if (updatedDoc.tempEmail) {
     const otp = randomstring.generate({ length: 4, charset: "numeric" });
-    const otpType = emailTypes.verifyEmail;
+    const otpType = fieldValidation.otpTypes.confirmNewEmail;
 
-    await OTP.create({ otp, otpType, email: updatedDoc.email });
+    await OTP.create({ otp, otpType, email: updatedDoc.tempEmail });
+    this.setUpdate({
+      emailChangedAt: Date.now(),
+    });
     sendEmail.emit("sendEmail", {
       emailType: emailTypes.verifyEmail,
-      email: updatedDoc.email,
-      otp: otpCode,
+      email: updatedDoc.tempEmail,
+      otp: otp,
     });
   }
   return next();
 });
 
-userSchema.post("findOneAndDelete", async function (doc, next) {
-  const userID = doc._id;
-  await Post.deleteMany({ owner: userID });
-});
 const User = mongoose.models.User || model("user", userSchema);
 
 export default User;

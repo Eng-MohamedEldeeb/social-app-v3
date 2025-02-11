@@ -1,22 +1,320 @@
+import OTP from "../../../DB/Models/OTP.model.js";
 import User from "../../../DB/Models/User.model.js";
+import { otpTypes } from "../../../DB/Options/field.validation.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
+import { errorResponse } from "../../../Utils/Res/error.response.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
+import { compareValue } from "../../../Utils/Security/hash.js";
 import { cloudUploader } from "../../../Utils/Upload/Cloudinary/cloudUploader.js";
 import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
+// Get User's Own Profile:
 export const getProfile = asnycHandler(async (req, res, next) => {
   return successResponse(res, { data: req.user });
-});
+}); //✅
+
+// Get User's Own Profile Following:
 export const getProfileFollowing = asnycHandler((req, res, next) => {
   return successResponse(res, { data: req.user });
-});
+}); //✅
+
+// Get User's Own Profile Followers:
 export const getProfileFollowers = asnycHandler((req, res, next) => {
   return successResponse(res, { data: req.user });
+}); //✅
+
+// Get Other User's Own Profile Profile:
+export const getUserProfile = asnycHandler((req, res, next) => {
+  return successResponse(res, { data: req.searchedUser });
+}); //✅
+
+// Get Other User's Own Profile Followers:
+export const getUserFollowers = asnycHandler((req, res, next) => {
+  const { privateProfile } = req.searchedUser;
+
+  //! If The Requseted Profile Is Private:
+  if (privateProfile)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("Profile").errors.private.error,
+        status: generateMessage("Profile").errors.private.status,
+      }
+    );
+
+  return successResponse(res, { data: req.searchedUser });
+}); //✅
+
+// Get Other User's Own Profile Following:
+export const getUserFollowing = asnycHandler((req, res, next) => {
+  const { privateProfile } = req.searchedUser;
+
+  //! If The Requseted Profile Is Private:
+  if (privateProfile)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("Profile").errors.private.error,
+        status: generateMessage("Profile").errors.private.status,
+      }
+    );
+
+  return successResponse(res, { data: req.searchedUser });
+}); //✅
+
+export const followUser = asnycHandler(async (req, res, next) => {
+  // Followed User Id:
+  const { userID } = req.params;
+
+  // Profile Id:
+  const { _id: profileID } = req.user;
+
+  // Updating Followed User Followers List:
+  const followedUser = await User.findOneAndUpdate(
+    { _id: userID, isDeactivated: { $exists: false } },
+    {
+      $addToSet: {
+        followers: profileID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, followers: 1 } }
+  );
+
+  //! If The Followed User Wasn't Found:
+  if (!followedUser)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("User").errors.notFound.error,
+        status: generateMessage("User").errors.notFound.status,
+      }
+    );
+
+  // Updating Profile's Following List:
+  const updatedFollowing = await User.findOneAndUpdate(
+    { _id: profileID, isDeactivated: { $exists: false } },
+    {
+      $addToSet: {
+        following: userID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, following: 1 } }
+  );
+
+  return successResponse(res, {
+    msg: generateMessage("User Following").success.msg,
+    status: generateMessage("User Following").success.status,
+    data: { updatedFollowing, followedUser },
+  });
+}); //✅
+
+export const unfollowUser = asnycHandler(async (req, res, next) => {
+  const { userID } = req.params;
+  const { _id: profileID } = req.user;
+  const followedUser = await User.findOneAndUpdate(
+    { _id: userID, isDeactivated: { $exists: false } },
+    {
+      $pull: {
+        followers: profileID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, followers: 1 } }
+  );
+
+  if (!followedUser)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("User").errors.notFound.error,
+        status: generateMessage("User").errors.notFound.status,
+      }
+    );
+
+  const updatedFollowing = await User.findOneAndUpdate(
+    { _id: profileID, isDeactivated: { $exists: false } },
+    {
+      $pull: {
+        following: userID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, following: 1 } }
+  );
+
+  if (!updatedFollowing)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.unAuthenticated.error,
+        status: generateMessage().errors.unAuthenticated.status,
+      }
+    );
+
+  return successResponse(res, {
+    msg: generateMessage("User Following").success.msg,
+    status: generateMessage("User Following").success.status,
+    data: { updatedFollowing, followedUser },
+  });
+}); //✅
+
+export const blockUser = asnycHandler(async (req, res, next) => {
+  const { userID } = req.params;
+  const { _id: profileID } = req.user;
+  const blockedUser = await User.findOne({
+    _id: userID,
+    isDeactivated: { $exists: false },
+  });
+
+  if (!blockedUser)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("User").errors.notFound.error,
+        status: generateMessage("User").errors.notFound.status,
+      }
+    );
+
+  const updatedBlockList = await User.findOneAndUpdate(
+    { _id: profileID, isDeactivated: { $exists: false } },
+    {
+      $addToSet: {
+        blockList: userID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, blockList: 1 } }
+  );
+
+  if (!updatedBlockList)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.unAuthenticated.error,
+        status: generateMessage().errors.unAuthenticated.status,
+      }
+    );
+
+  return successResponse(res, {
+    msg: generateMessage("User Block List").success.msg,
+    status: generateMessage("User Block List").success.status,
+    data: updatedBlockList,
+  });
+}); //✅
+
+export const unblockUser = asnycHandler(async (req, res, next) => {
+  const { userID } = req.params;
+  const { _id: profileID } = req.user;
+  const blockedUser = await User.findOne({
+    _id: userID,
+    isDeactivated: { $exists: false },
+  });
+
+  if (!blockedUser)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage("User").errors.notFound.error,
+        status: generateMessage("User").errors.notFound.status,
+      }
+    );
+
+  const updatedBlockList = await User.findOneAndUpdate(
+    { _id: profileID, isDeactivated: { $exists: false } },
+    {
+      $pull: {
+        blockList: userID,
+      },
+    },
+    { lean: true, new: true, projection: { userName: 1, blockList: 1 } }
+  );
+
+  if (!updatedBlockList)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.unAuthenticated.error,
+        status: generateMessage().errors.unAuthenticated.status,
+      }
+    );
+
+  return successResponse(res, {
+    msg: generateMessage("User Block List").success.msg,
+    status: generateMessage("User Block List").success.status,
+    data: updatedBlockList,
+  });
+}); //✅
+
+export const togglePrivateProfile = asnycHandler(async (req, res, next) => {
+  const { _id, privateProfile } = req.user;
+  const updateProfile = await User.findOneAndUpdate(
+    { _id, isDeactivated: { $exists: false } },
+    { privateProfile: !privateProfile },
+    { lean: true, new: true, projection: "privateProfile" }
+  );
+
+  if (!updateProfile)
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.unAuthenticated.error,
+        status: generateMessage().errors.unAuthenticated.status,
+      }
+    );
+
+  return successResponse(res, {
+    msg: generateMessage("User Profile").success.msg,
+    status: generateMessage("User Profile").success.status,
+    data: updateProfile,
+  });
+}); //✅
+
+export const deleteProfile = asnycHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  const { password: dbPassword } = req.user;
+
+  if (
+    !compareValue({
+      plainText: password,
+      cryptedValue: dbPassword,
+    })
+  )
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.invalidCredentials.error,
+        status: generateMessage().errors.invalidCredentials.status,
+      }
+    );
+
+  const existOtp = await OTP.findOne(
+    {
+      email,
+      otpType: otpTypes.deleteAccount,
+    },
+    {},
+    {
+      projection: { otp: 1 },
+    }
+  );
+
+  if (existOtp) {
+    const { error, status } = generateMessage().errors.codeAlreadySent;
+    return errorResponse({ next }, { error, status });
+  }
+
+  const data = await OTP.create({ email, otpType: otpTypes.deleteAccount });
+
+  return successResponse(res, {
+    msg: generateMessage().success.sendOTP.msg,
+    status: generateMessage().success.sendOTP.msg,
+    data,
+  });
 });
 
+export const confirmDeleteProfile = asnycHandler(async (req, res, next) => {});
+
+// Update User's Own Profile:
 export const updateProfile = asnycHandler(async (req, res, next) => {
-  const updatedData = req.body;
+  const { email, ...updatedData } = req.body;
   const { msg, status } = generateMessage("Profile").success.updated;
   let uploadedImg = {};
 
@@ -35,6 +333,7 @@ export const updateProfile = asnycHandler(async (req, res, next) => {
     req.user._id,
     {
       ...updatedData,
+      ...(email && { tempEmail: email }),
       ...(uploadedImg.public_id && {
         $set: {
           profilePicture: {
@@ -46,9 +345,10 @@ export const updateProfile = asnycHandler(async (req, res, next) => {
     },
     {
       new: true,
-      projection: `${Object.keys(updatedData).join(" ")} ${
-        uploadedImg.public_id && "profilePicture"
-      }`,
+      projection: `${Object.keys({
+        ...(email && { tempEmail: email }),
+        ...updatedData,
+      }).join(" ")} ${uploadedImg.public_id && "profilePicture"}`,
       lean: true,
     }
   );
@@ -58,21 +358,29 @@ export const updateProfile = asnycHandler(async (req, res, next) => {
     msg,
     status,
   });
-});
-export const twoStepsVerification = asnycHandler((req, res, next) => {});
-export const privateProfile = asnycHandler((req, res, next) => {});
-export const changeEmail = asnycHandler((req, res, next) => {});
-export const confirmNewEmail = asnycHandler((req, res, next) => {});
-export const changePassword = asnycHandler((req, res, next) => {});
-export const confirmNewPassword = asnycHandler((req, res, next) => {});
+}); //✅
 
-export const deleteProfile = asnycHandler((req, res, next) => {});
+export const confirmNewEmail = asnycHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  const { newEmail } = req.body;
+  const data = await User.findByIdAndUpdate(
+    _id,
+    { email: newEmail, $unset: { tempEmail: 1 } },
+    {
+      new: true,
+      lean: true,
+      projection: {
+        email: 1,
+      },
+    }
+  );
+  return successResponse(res, {
+    data,
+    msg: generateMessage("E-mail").success.updated.msg,
+    status: generateMessage("E-mail").success.updated.status,
+  });
+}); //✅
 
-export const followUser = asnycHandler((req, res, next) => {});
-export const unfollowUser = asnycHandler((req, res, next) => {});
-export const blockUser = asnycHandler((req, res, next) => {});
-export const unblockUser = asnycHandler((req, res, next) => {});
-
-export const getUserProfile = asnycHandler((req, res, next) => {});
-export const getUserFollowers = asnycHandler((req, res, next) => {});
-export const getUserFollowing = asnycHandler((req, res, next) => {});
+export const changePassword = asnycHandler(async (req, res, next) => {});
+export const confirmNewPassword = asnycHandler(async (req, res, next) => {});
+export const twoStepsVerification = asnycHandler(async (req, res, next) => {});

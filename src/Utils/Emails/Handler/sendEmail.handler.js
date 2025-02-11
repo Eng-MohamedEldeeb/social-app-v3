@@ -6,6 +6,7 @@ export const emailTypes = {
   confirmation: "confirmation",
   verifyEmail: "verifyEmail",
   resetPassword: "resetPassword",
+  deleteAccount: "deleteAccount",
 };
 
 export const sendEmailHandler = async ({
@@ -29,6 +30,8 @@ export const sendEmailHandler = async ({
         break;
       case emailTypes.resetPassword:
         await transporter.sendMail(emailSchema.resetPassword({ email, otp }));
+      case emailTypes.deleteAccount:
+        await transporter.sendMail(emailSchema.deleteAccount({ email, otp }));
         break;
     }
   } catch (error) {

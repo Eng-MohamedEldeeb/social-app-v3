@@ -3,13 +3,13 @@ import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";
 
-export const validateOTP = ({ otpType = "", otpName = "" } = {}) => {
+export const validateOTP = ({ otpType = "", otpFieldName = "" } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { email } = req.body;
-    const otpCode = req.headers[otpName];
+    const { email, newEmail } = req.body;
+    const otpCode = req.headers[otpFieldName];
 
     const result = await OTP.findOne(
-      { email, otpType },
+      { email: email || newEmail, otpType },
       {},
       { projection: { otp: 1, attempts: 1, otpType: 1 } }
     );

@@ -36,7 +36,10 @@ router.post(
     schema: authValidators.register,
     otp: "registeration",
   }),
-  validateOTP({ otpType: otpTypes.confirmation, otpName: "registeration" }),
+  validateOTP({
+    otpType: otpTypes.confirmation,
+    otpFieldName: "registeration",
+  }),
   authService.register
 );
 
@@ -76,7 +79,10 @@ router.put(
     schema: authValidators.resetPassword,
     otp: "reset-password",
   }),
-  validateOTP({ otpType: otpTypes.resetPassword, otpName: "reset-password" }),
+  validateOTP({
+    otpType: otpTypes.resetPassword,
+    otpFieldName: "reset-password",
+  }),
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
   }),

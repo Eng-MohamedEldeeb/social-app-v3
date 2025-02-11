@@ -18,7 +18,6 @@ export const register = joi
     confirmPassword: generalFields.password
       .valid(joi.ref("password"))
       .required(),
-    phone: generalFields.phone.required(),
     file: joi.object().keys({
       ...generalFields.file,
       mimetype: generalFields.fileType.mimetype

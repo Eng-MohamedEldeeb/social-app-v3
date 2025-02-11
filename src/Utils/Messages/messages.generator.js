@@ -27,7 +27,8 @@ export const generateMessage = (fieldName = "", enumValues = []) => {
       },
       // Authintecation :
       unAuthenticated: {
-        error: "You are not Authenticated to Procced!",
+        error:
+          "Your Account is Deactiveted to Procced!, login again To Restore Your Account",
         status: 403,
       },
       blockedReq: {
@@ -57,7 +58,17 @@ export const generateMessage = (fieldName = "", enumValues = []) => {
       unMatchedPasswords: { error: "Passwords Aren't Matching!", status: 400 },
 
       notTheOwner: {
-        error: `You're Not The Owner Of The Requseted ${fieldName}`,
+        error: `You're Not The Owner Of The Requseted ${fieldName} to Procced`,
+        status: 403,
+      },
+
+      private: {
+        error: `The Requested ${fieldName} Is Private`,
+        status: 403,
+      },
+
+      notAllowed: {
+        error: `The Requested ${fieldName} Not Allowing To Post Comments!`,
         status: 403,
       },
     },

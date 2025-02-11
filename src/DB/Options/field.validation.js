@@ -11,6 +11,9 @@ export const otpTypes = {
   greeting: "greeting",
   confirmation: "confirmation",
   resetPassword: "resetPassword",
+  confirmNewEmail: "confirmNewEmail",
+  confirmNewPassword: "confirmNewPassword",
+  deleteAccount: "deleteAccount",
 };
 
 export const defaultValues = {

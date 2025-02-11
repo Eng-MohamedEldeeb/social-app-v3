@@ -17,7 +17,7 @@ const optSchema = new Schema(
       validate: {
         validator: validateField(emailRegEx),
       },
-      required: [true, generateMessage("email").errors.required.msg],
+      required: [true, generateMessage("email").errors.required.error],
     },
 
     otpType: {

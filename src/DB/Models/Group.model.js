@@ -10,7 +10,7 @@ const groupSchema = new Schema(
 
     groupName: {
       type: String,
-      required: [true, generateMessage("Group Name").errors.required.error]
+      required: [true, generateMessage("Group Name").errors.required.error],
 
       minlength: [
         fieldOptions.fieldLength({
@@ -32,9 +32,9 @@ const groupSchema = new Schema(
           max: fieldOptions.groupNameLength.max,
         }).max.msg,
       ],
-      },
+    },
 
-    info: {
+    groupInfo: {
       type: String,
       default: "Welcome To Our Group",
 
@@ -63,7 +63,6 @@ const groupSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
-    skipVersioning: true,
   }
 );
 
