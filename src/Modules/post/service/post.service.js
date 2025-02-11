@@ -21,10 +21,9 @@ export const getAllPosts = asnycHandler(async (req, res, next) => {
     { lean: true }
   );
 
-  return successResponse(res, {
-    ...((data.length == 0 && { msg: "No Posts Yet" }) || { msg: "Done" }),
+  return successResponse(res, { msg: "Done" ,
     status: 200,
-    ...(data.length && { data }),
+    ...(data.length && { data } || {data: "No Posts Yet"}),
   });
 });
 
@@ -45,23 +44,33 @@ export const addPost = asnycHandler(async (req, res, next) => {
   // Post Data:
   const postData = req.body;
 
-  // Post's Picture:
-  let attachment = {};
-
   if (req.file) {
-    const { public_id, secure_url } = await cloudUploader({
+    const upload = await cloudUploader({
       req,
       userId: _id,
       folderType: folderTypes.post,
-    });
-    attachment = { public_id, secure_url };
+    }).then((pic)=>{
+const data = await Post.create({
+    ...postData,
+    owner: _id,
+     attachment: {public_id: pic.public_id, secure_url: pic.secure_url},
+  }).catch(err=>{
+return errorResponse({next}, {error: err.message, status: 500})
+});
+
+  return successResponse(res, {
+    msg: generateMessage("Post").success.created.msg,
+    status: generateMessage("Post").success.created.status,
+    data,
+  });
+});
+    
   }
 
-  // Add Post to DataBase
+  // Add Post to DataBase if there was no attachment 
   const data = await Post.create({
     ...postData,
     owner: _id,
-    ...(attachment.public_id && { attachment }),
   });
 
   const updatedUser = await User.findByIdAndUpdate(_id, {
