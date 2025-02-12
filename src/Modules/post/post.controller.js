@@ -82,7 +82,7 @@ router.get(
  * @description Creating Post
  **/
 router.post(
-  "/",
+  "/:groupId?",
   fileReader({ fileType: fileTypes.img }).single("img"),
   isAuthorized,
   isAuthenticated({
