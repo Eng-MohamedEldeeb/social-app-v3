@@ -15,20 +15,26 @@ export const getCommentReplies = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    ...((data.length == 0 && { msg: "No Replies Yet" }) || { msg: "Done" }),
-    status: 200,
-    ...(data.length && { data }),
-  });
+  return successResponse(
+    { res },
+    {
+      ...((data.length == 0 && { msg: "No Replies Yet" }) || { msg: "Done" }),
+      status: 200,
+      ...(data.length && { data }),
+    }
+  );
 });
 
 // Get Single Reply:
 export const getSingleReply = asnycHandler(async (req, res, next) => {
-  return successResponse(res, {
-    msg: "Done",
-    status: 200,
-    data: req.reply,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: "Done",
+      status: 200,
+      data: req.reply,
+    }
+  );
 });
 
 // Add Reply:
@@ -50,11 +56,14 @@ export const addReply = asnycHandler(async (req, res, next) => {
     replyingTo: replyID,
   });
 
-  return successResponse(res, {
-    msg: generateMessage("Reply").success.created.msg,
-    status: generateMessage("Reply").success.created.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Reply").success.created.msg,
+      status: generateMessage("Reply").success.created.status,
+      data,
+    }
+  );
 });
 
 // Edit Reply:
@@ -76,11 +85,14 @@ export const editReply = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    msg: generateMessage("Reply").success.updated.msg,
-    status: generateMessage("Reply").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Reply").success.updated.msg,
+      status: generateMessage("Reply").success.updated.status,
+      data,
+    }
+  );
 });
 
 // Delete Reply:
@@ -92,11 +104,14 @@ export const deleteReply = asnycHandler(async (req, res, next) => {
   // Delete Comment :
   const data = await Comment.findOneAndDelete({ replyingTo: replyID });
 
-  return successResponse(res, {
-    msg: generateMessage("Reply").success.deleted.msg,
-    status: generateMessage("Reply").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Reply").success.deleted.msg,
+      status: generateMessage("Reply").success.deleted.status,
+      data,
+    }
+  );
 });
 
 // Un/Like Reply:
@@ -125,9 +140,12 @@ export const replyLike = asnycHandler(async (req, res, next) => {
     },
     { new: true, lean: true, projection: { likedBy: 1 } }
   );
-  return successResponse(res, {
-    msg: generateMessage("Reply").success.updated.msg,
-    status: generateMessage("Reply").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Reply").success.updated.msg,
+      status: generateMessage("Reply").success.updated.status,
+      data,
+    }
+  );
 });

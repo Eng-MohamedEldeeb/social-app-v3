@@ -68,7 +68,7 @@ export const generateMessage = (fieldName = "", enumValues = []) => {
       },
 
       notAllowed: {
-        error: `The Requested ${fieldName} Not Allowing To Post Comments!`,
+        error: `Only Adimns are Allowed To Procced!`,
         status: 403,
       },
     },

@@ -9,7 +9,8 @@ export function generateToken({
     const generatedToken = jwt.sign(payload, secretKey, { expiresIn });
     return generatedToken;
   } catch (error) {
-    return console.error("Token Error: " + error.message);
+    console.error("Token Error: " + error.message);
+    return error;
   }
 }
 export function verifyToken({ token, secretKey = process.env.JWT_KEY }) {
@@ -17,6 +18,6 @@ export function verifyToken({ token, secretKey = process.env.JWT_KEY }) {
     const verifiedToken = jwt.verify(token, secretKey);
     return verifiedToken;
   } catch (error) {
-    return console.error("Token Error: " + error.message);
+    return error;
   }
 }

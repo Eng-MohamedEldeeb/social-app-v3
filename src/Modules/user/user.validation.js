@@ -51,3 +51,12 @@ export const unblockUser = joi
     userID: generalFields.id.required(),
   })
   .required();
+
+// Join Group:
+export const groupJoin = joi
+  .object()
+  .keys({
+    id: generalFields.id.required(),
+    ["authorization"]: generalFields.token.required(),
+  })
+  .required();

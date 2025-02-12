@@ -19,7 +19,7 @@ const router = Router();
  **/
 router.post(
   "/confirm-email",
-  validation({ schema: authValidators.confirmEmail }),
+  validation({ schema: authValidators.confirmEmail, token: false }),
   isExisted({ options: { projection: authSelection.confirmEmail.projection } }),
   authService.confirmEmail
 );
@@ -35,6 +35,7 @@ router.post(
   validation({
     schema: authValidators.register,
     otp: "registeration",
+    token: false,
   }),
   validateOTP({
     otpType: otpTypes.confirmation,
@@ -50,7 +51,7 @@ router.post(
  **/
 router.post(
   "/login",
-  validation({ schema: authValidators.login }),
+  validation({ schema: authValidators.login, token: false }),
   authService.login
 );
 
@@ -61,7 +62,7 @@ router.post(
  **/
 router.post(
   "/forgot-password",
-  validation({ schema: authValidators.forgotPassword }),
+  validation({ schema: authValidators.forgotPassword, token: false }),
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
   }),
@@ -78,6 +79,7 @@ router.put(
   validation({
     schema: authValidators.resetPassword,
     otp: "reset-password",
+    token: false,
   }),
   validateOTP({
     otpType: otpTypes.resetPassword,

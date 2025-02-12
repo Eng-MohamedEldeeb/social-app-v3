@@ -1,5 +1,5 @@
 import OTP from "../../../DB/Models/OTP.model.js";
-import User from "../../../DB/Models/User.model.js";
+import User from "../../../DB/Models/User/User.model.js";
 import { otpTypes } from "../../../DB/Options/field.validation.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
@@ -11,17 +11,17 @@ import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.o
 
 // Get User's Own Profile:
 export const getProfile = asnycHandler(async (req, res, next) => {
-  return successResponse(res, { data: req.user });
+  return successResponse({ res }, { data: req.user });
 }); //✅
 
 // Get User's Own Profile Following:
 export const getProfileFollowing = asnycHandler((req, res, next) => {
-  return successResponse(res, { data: req.user });
+  return successResponse({ res }, { data: req.user });
 }); //✅
 
 // Get User's Own Profile Followers:
 export const getProfileFollowers = asnycHandler((req, res, next) => {
-  return successResponse(res, { data: req.user });
+  return successResponse({ res }, { data: req.user });
 }); //✅
 
 export const togglePrivateProfile = asnycHandler(async (req, res, next) => {
@@ -41,11 +41,14 @@ export const togglePrivateProfile = asnycHandler(async (req, res, next) => {
       }
     );
 
-  return successResponse(res, {
-    msg: generateMessage("User Profile").success.msg,
-    status: generateMessage("User Profile").success.status,
-    data: updateProfile,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("User Profile").success.msg,
+      status: generateMessage("User Profile").success.status,
+      data: updateProfile,
+    }
+  );
 }); //✅
 
 export const deleteProfile = asnycHandler(async (req, res, next) => {
@@ -85,11 +88,14 @@ export const deleteProfile = asnycHandler(async (req, res, next) => {
 
   const data = await OTP.create({ email, otpType: otpTypes.deleteAccount });
 
-  return successResponse(res, {
-    msg: generateMessage().success.sendOTP.msg,
-    status: generateMessage().success.sendOTP.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage().success.sendOTP.msg,
+      status: generateMessage().success.sendOTP.status,
+      data,
+    }
+  );
 }); //✅
 
 export const confirmDeleteProfile = asnycHandler(async (req, res, next) => {
@@ -104,11 +110,14 @@ export const confirmDeleteProfile = asnycHandler(async (req, res, next) => {
       }
     );
 
-  return successResponse(res, {
-    msg: generateMessage("Account").success.deleted.msg,
-    status: generateMessage("Account").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Account").success.deleted.msg,
+      status: generateMessage("Account").success.deleted.status,
+      data,
+    }
+  );
 }); //✅
 
 // Update User's Own Profile:
@@ -152,11 +161,14 @@ export const updateProfile = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    data,
-    msg,
-    status,
-  });
+  return successResponse(
+    { res },
+    {
+      data,
+      msg,
+      status,
+    }
+  );
 }); //✅
 
 export const confirmNewEmail = asnycHandler(async (req, res, next) => {
@@ -173,11 +185,14 @@ export const confirmNewEmail = asnycHandler(async (req, res, next) => {
       },
     }
   );
-  return successResponse(res, {
-    data,
-    msg: generateMessage("E-mail").success.updated.msg,
-    status: generateMessage("E-mail").success.updated.status,
-  });
+  return successResponse(
+    { res },
+    {
+      data,
+      msg: generateMessage("E-mail").success.updated.msg,
+      status: generateMessage("E-mail").success.updated.status,
+    }
+  );
 }); //✅
 
 export const changePassword = asnycHandler(async (req, res, next) => {
@@ -204,11 +219,14 @@ export const changePassword = asnycHandler(async (req, res, next) => {
     otpType: otpTypes.confirmNewPassword,
   });
 
-  return successResponse(res, {
-    msg: generateMessage().success.sendOTP.msg,
-    status: generateMessage().success.sendOTP.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage().success.sendOTP.msg,
+      status: generateMessage().success.sendOTP.status,
+      data,
+    }
+  );
 }); //✅
 
 export const confirmNewPassword = asnycHandler(async (req, res, next) => {
@@ -234,11 +252,14 @@ export const confirmNewPassword = asnycHandler(async (req, res, next) => {
     { new: true, lean: true, projection: { password: 1, passwords: 1 } }
   );
 
-  return successResponse(res, {
-    msg: generateMessage("Password").success.updated.msg,
-    status: generateMessage("Password").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Password").success.updated.msg,
+      status: generateMessage("Password").success.updated.status,
+      data,
+    }
+  );
 }); //✅
 
 export const twoStepsVerification = asnycHandler(async (req, res, next) => {});

@@ -8,7 +8,7 @@ export const globalErrorHandler = (error, req, res, next) => {
     { res },
     {
       error: { error: error.message, stack: error.stack },
-      code: error.cause,
+      status: error.cause,
     }
   );
 };

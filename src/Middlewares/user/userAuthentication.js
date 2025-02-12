@@ -1,4 +1,4 @@
-import User from "../../DB/Models/User.model.js";
+import User from "../../DB/Models/User/User.model.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";

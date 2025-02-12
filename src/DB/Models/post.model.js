@@ -54,6 +54,8 @@ const postSchema = new Schema(
       required: [true, generateMessage("Post's Owner").errors.required.error],
     },
 
+    onGroup: { type: Types.ObjectId, ref: "group" },
+
     allowComments: Boolean,
     isArchived: Boolean,
   },

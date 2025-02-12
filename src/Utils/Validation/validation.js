@@ -3,17 +3,28 @@ import { errorResponse } from "../Res/error.response.js";
 
 export const validation = ({
   schema = null,
-  token = false,
+  token = true,
   query = false,
   otp = false,
 }) => {
   return asnycHandler((req, res, next) => {
     const values = {
+      // Token Value:
+      ...(token && { ["authorization"]: req.headers["authorization"] }),
+
+      // Body Values:
       ...req.body,
+
+      // Params:
       ...req.params,
-      ...(req.file && { file: req.file }),
-      ...(token && { [token]: req.headers[token] }),
+
+      // Query Params:
       ...(query && { [query]: req.headers[query] }),
+
+      // File | Files Values:
+      ...(req.file && { file: req.file }),
+
+      // OTP Value:
       ...(otp && {
         [otp]: req.headers[otp],
       }),

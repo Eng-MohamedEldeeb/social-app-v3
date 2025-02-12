@@ -6,6 +6,7 @@ import { verifyToken } from "../../Utils/Security/token.js";
 const bearerTokens = {
   bearer: "Bearer",
 };
+
 export const isAuthorized = asnycHandler((req, res, next) => {
   //? Authorization :
   const { authorization } = req.headers;
@@ -16,10 +17,11 @@ export const isAuthorized = asnycHandler((req, res, next) => {
       { next },
       {
         error: generateMessage("Token").errors.required.error,
-        status: generateMessage("Token").errors.required.status,
+        status: 400,
       }
     );
 
+  // Bearer , token :
   const [bearer, token] = authorization.split(" ");
 
   //! Bearer Missing :
@@ -28,7 +30,7 @@ export const isAuthorized = asnycHandler((req, res, next) => {
       { next },
       {
         error: generateMessage("Bearer Token").errors.required.error,
-        status: generateMessage("Bearer Token").errors.required.status,
+        status: 400,
       }
     );
 
@@ -38,13 +40,34 @@ export const isAuthorized = asnycHandler((req, res, next) => {
       { next },
       {
         error: generateMessage().errors.invalidToken.error,
-        status: generateMessage().errors.invalidToken.status,
+        status: 400,
       }
     );
 
   // Verifing Token Data :
   const tokenData = verifyToken({ token });
 
+  //! If The Token Was Expired :
+  if (tokenData.name == "TokenExpiredError")
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.expiredToken.error,
+        status: 400,
+      }
+    );
+
+  //! If The Token Was in-valid :
+  if (tokenData.name == "JsonWebTokenError")
+    return errorResponse(
+      { next },
+      {
+        error: generateMessage().errors.invalidToken.error,
+        status: 400,
+      }
+    );
+
   req.token = tokenData;
+
   return next();
 });

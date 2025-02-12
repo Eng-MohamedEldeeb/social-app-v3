@@ -7,6 +7,7 @@ import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { userAuthentication } from "../../Middlewares/user/userAuthentication.js";
 import profileRouter from "./../profile/profile.controller.js";
+import { groupAuthentication } from "../../Middlewares/group/groupAuthentication.js";
 
 const router = Router();
 
@@ -150,4 +151,22 @@ router.delete(
   userService.unblockUser
 ); //✅
 
+/**
+ * @method POST
+ * @link /user/block
+ * @description Block User
+ * @param /block/:userID
+ **/
+router.post(
+  "/group/join-unjoin/:id",
+  validation({
+    schema: userValidation.groupJoin,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    options: { projection: userSelection.groupJoin.projection },
+  }),
+  groupAuthentication(),
+  userService.groupJoin
+); //✅
 export default router;

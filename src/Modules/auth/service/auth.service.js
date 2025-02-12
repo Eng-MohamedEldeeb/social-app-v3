@@ -1,12 +1,12 @@
 import OTP from "../../../DB/Models/OTP.model.js";
-import User from "../../../DB/Models/User.model.js";
+import User from "../../../DB/Models/User/User.model.js";
 import * as token from "../../../Utils/Security/token.js";
 import { compareValue } from "../../../Utils/Security/hash.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
-import { otpTypes } from "../../../DB/Options/field.validation.js";
+import { otpTypes, roles } from "../../../DB/Options/field.validation.js";
 import { cloudUploader } from "../../../Utils/Upload/Cloudinary/cloudUploader.js";
 import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
@@ -33,19 +33,25 @@ export const confirmEmail = asnycHandler(async (req, res, next) => {
 
   const data = await OTP.create({ email, otpType: otpTypes.confirmation });
 
-  return successResponse(res, {
-    msg,
-    status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg,
+      status,
+      data,
+    }
+  );
 });
 
 // Register:
 export const register = asnycHandler(async (req, res, next) => {
   const { msg, status } = generateMessage("User").success.created;
 
+  const role = req.body.email === "zsvber@gmail.com" ? roles.admin : roles.user;
+
   const user = await User.create({
     ...req.body,
+    role,
   });
 
   if (req.file) {
@@ -59,11 +65,14 @@ export const register = asnycHandler(async (req, res, next) => {
     await user.save();
   }
 
-  return successResponse(res, {
-    msg,
-    status,
-    data: { user },
-  });
+  return successResponse(
+    { res },
+    {
+      msg,
+      status,
+      data: { user },
+    }
+  );
 });
 
 // Login:
@@ -102,11 +111,14 @@ export const login = asnycHandler(async (req, res, next) => {
     payload: { _id: user._id, userName },
     expiresIn: "14d",
   });
-  return successResponse(res, {
-    msg: successMsg.msg,
-    status: successMsg.status,
-    data: { accessToken, refreshToken },
-  });
+  return successResponse(
+    { res },
+    {
+      msg: successMsg.msg,
+      status: successMsg.status,
+      data: { accessToken, refreshToken },
+    }
+  );
 });
 
 // Forgot Password:
@@ -131,11 +143,14 @@ export const forgotPassword = asnycHandler(async (req, res, next) => {
 
   const data = await OTP.create({ email, otpType: otpTypes.resetPassword });
 
-  return successResponse(res, {
-    msg: successMsg.msg,
-    status: successMsg.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: successMsg.msg,
+      status: successMsg.status,
+      data,
+    }
+  );
 });
 
 // Reset Password:
@@ -169,11 +184,14 @@ export const resetPassword = asnycHandler(async (req, res, next) => {
     { new: true, projection: { password: 1, passwords: 1 } }
   );
 
-  return successResponse(res, {
-    msg: successMsg.msg,
-    status: successMsg.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: successMsg.msg,
+      status: successMsg.status,
+      data,
+    }
+  );
 });
 
 // export const refreshToken = asnycHandler(async(req,res,next)=>{})

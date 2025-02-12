@@ -18,20 +18,26 @@ export const getPostComments = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    ...((data.length == 0 && { msg: "No Comments Yet" }) || { msg: "Done" }),
-    status: 200,
-    ...(data.length && { data }),
-  });
+  return successResponse(
+    { res },
+    {
+      ...((data.length == 0 && { msg: "No Comments Yet" }) || { msg: "Done" }),
+      status: 200,
+      ...(data.length && { data }),
+    }
+  );
 });
 
 // Get Single Post:
 export const getSingleComment = asnycHandler(async (req, res, next) => {
-  return successResponse(res, {
-    msg: "Done",
-    status: 200,
-    data: req.comment,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: "Done",
+      status: 200,
+      data: req.comment,
+    }
+  );
 });
 
 // Add Comment:
@@ -63,11 +69,14 @@ export const addComment = asnycHandler(async (req, res, next) => {
     ...(attachment.public_id && { attachment }),
   });
 
-  return successResponse(res, {
-    msg: generateMessage("Comment").success.created.msg,
-    status: generateMessage("Comment").success.created.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Comment").success.created.msg,
+      status: generateMessage("Comment").success.created.status,
+      data,
+    }
+  );
 });
 
 // Edit Comment:
@@ -89,11 +98,14 @@ export const editComment = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    msg: generateMessage("Comment").success.updated.msg,
-    status: generateMessage("Comment").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Comment").success.updated.msg,
+      status: generateMessage("Comment").success.updated.status,
+      data,
+    }
+  );
 });
 
 // Delete Comment:
@@ -112,11 +124,14 @@ export const deleteComment = asnycHandler(async (req, res, next) => {
 
     if (result === "ok") {
       const data = await Comment.findByIdAndDelete(commentID);
-      return successResponse(res, {
-        msg: generateMessage("Comment").success.deleted.msg,
-        status: generateMessage("Comment").success.deleted.status,
-        data,
-      });
+      return successResponse(
+        { res },
+        {
+          msg: generateMessage("Comment").success.deleted.msg,
+          status: generateMessage("Comment").success.deleted.status,
+          data,
+        }
+      );
     } else {
       return errorResponse(
         { next },
@@ -132,11 +147,14 @@ export const deleteComment = asnycHandler(async (req, res, next) => {
   // If The Comment Doesn't Have any Attachment:
   const data = await Comment.findByIdAndDelete(commentID);
 
-  return successResponse(res, {
-    msg: generateMessage("Comment").success.deleted.msg,
-    status: generateMessage("Comment").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Comment").success.deleted.msg,
+      status: generateMessage("Comment").success.deleted.status,
+      data,
+    }
+  );
 });
 
 // Un/Like Comment:
@@ -165,9 +183,12 @@ export const commentLike = asnycHandler(async (req, res, next) => {
     },
     { new: true, lean: true, projection: { likedBy: 1 } }
   );
-  return successResponse(res, {
-    msg: generateMessage("Comment").success.updated.msg,
-    status: generateMessage("Comment").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Comment").success.updated.msg,
+      status: generateMessage("Comment").success.updated.status,
+      data,
+    }
+  );
 });

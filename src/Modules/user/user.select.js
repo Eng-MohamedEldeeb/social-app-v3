@@ -75,3 +75,11 @@ export const unblockUser = {
     isDeactivated: 1,
   },
 };
+
+// Join Group:
+export const groupJoin = {
+  projection: {
+    _id: 1,
+    groups: 1,
+  },
+};

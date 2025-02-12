@@ -1,5 +1,5 @@
 import Post from "../../../DB/Models/Post.model.js";
-import User from "../../../DB/Models/User.model.js";
+import User from "../../../DB/Models/User/User.model.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";
@@ -21,20 +21,26 @@ export const getAllPosts = asnycHandler(async (req, res, next) => {
     { lean: true }
   );
 
-  return successResponse(res, {
-    msg: "Done",
-    status: 200,
-    ...((data.length && { data }) || { data: "No Posts Yet" }),
-  });
+  return successResponse(
+    { res },
+    {
+      msg: "Done",
+      status: 200,
+      ...((data.length && { data }) || { data: "No Posts Yet" }),
+    }
+  );
 });
 
 // Get Single Post:
 export const getSinglePost = asnycHandler(async (req, res, next) => {
-  return successResponse(res, {
-    msg: "Done",
-    status: 200,
-    data: req.post,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: "Done",
+      status: 200,
+      data: req.post,
+    }
+  );
 });
 
 // Add Post:
@@ -46,7 +52,7 @@ export const addPost = asnycHandler(async (req, res, next) => {
   const postData = req.body;
 
   if (req.file) {
-    const upload = await cloudUploader({
+    const upload = cloudUploader({
       req,
       userId: _id,
       folderType: folderTypes.post,
@@ -58,11 +64,14 @@ export const addPost = asnycHandler(async (req, res, next) => {
           attachment: { public_id: pic.public_id, secure_url: pic.secure_url },
         });
 
-        return successResponse(res, {
-          msg: generateMessage("Post").success.created.msg,
-          status: generateMessage("Post").success.created.status,
-          data,
-        });
+        return successResponse(
+          { res },
+          {
+            msg: generateMessage("Post").success.created.msg,
+            status: generateMessage("Post").success.created.status,
+            data,
+          }
+        );
       })
       .catch((err) => {
         return errorResponse({ next }, { error: err.message, status: 500 });
@@ -81,11 +90,14 @@ export const addPost = asnycHandler(async (req, res, next) => {
     },
   });
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.created.msg,
-    status: generateMessage("Post").success.created.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.created.msg,
+      status: generateMessage("Post").success.created.status,
+      data,
+    }
+  );
 });
 
 // Edit Post:
@@ -103,11 +115,14 @@ export const editPost = asnycHandler(async (req, res, next) => {
     lean: true,
   });
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.updated.msg,
-    status: generateMessage("Post").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.updated.msg,
+      status: generateMessage("Post").success.updated.status,
+      data,
+    }
+  );
 });
 
 // Archive Post:
@@ -126,11 +141,14 @@ export const archivePost = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.deleted.msg,
-    status: generateMessage("Post").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.deleted.msg,
+      status: generateMessage("Post").success.deleted.status,
+      data,
+    }
+  );
 });
 
 // Restore Post:
@@ -149,11 +167,14 @@ export const restorePost = asnycHandler(async (req, res, next) => {
     }
   );
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.deleted.msg,
-    status: generateMessage("Post").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.deleted.msg,
+      status: generateMessage("Post").success.deleted.status,
+      data,
+    }
+  );
 });
 
 // Delete Post:
@@ -171,11 +192,14 @@ export const deletePost = asnycHandler(async (req, res, next) => {
 
     if (result === "ok") {
       const data = await Post.findByIdAndDelete(postID);
-      return successResponse(res, {
-        msg: generateMessage("Post").success.deleted.msg,
-        status: generateMessage("Post").success.deleted.status,
-        data,
-      });
+      return successResponse(
+        { res },
+        {
+          msg: generateMessage("Post").success.deleted.msg,
+          status: generateMessage("Post").success.deleted.status,
+          data,
+        }
+      );
     } else {
       return errorResponse(
         { next },
@@ -189,11 +213,14 @@ export const deletePost = asnycHandler(async (req, res, next) => {
   // If The Post Doesn't Have any Attachment:
   const data = await Post.findByIdAndDelete(postID);
 
-  return successResponse(res, {
-    msg: generateMessage("Post").success.deleted.msg,
-    status: generateMessage("Post").success.deleted.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.deleted.msg,
+      status: generateMessage("Post").success.deleted.status,
+      data,
+    }
+  );
 });
 
 // Un/Like Post:
@@ -222,9 +249,12 @@ export const postLike = asnycHandler(async (req, res, next) => {
     },
     { new: true, lean: true, projection: { likedBy: 1 } }
   );
-  return successResponse(res, {
-    msg: generateMessage("Post").success.updated.msg,
-    status: generateMessage("Post").success.updated.status,
-    data,
-  });
+  return successResponse(
+    { res },
+    {
+      msg: generateMessage("Post").success.updated.msg,
+      status: generateMessage("Post").success.updated.status,
+      data,
+    }
+  );
 });
