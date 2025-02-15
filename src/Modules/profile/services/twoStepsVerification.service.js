@@ -1,6 +1,6 @@
-import OTP from "../../../DB/Models/OTP.model.js";
+import OTP from "../../../DB/Models/OTP/OTP.model.js";
 import User from "../../../DB/Models/User/User.model.js";
-import { otpTypes } from "../../../DB/Options/field.validation.js";
+import { otpTypes } from "../../../DB/Models/OTP/Validation/OTP.validation.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";

@@ -3,17 +3,18 @@ export const validateField = (regex) => {
     return regex.test(v);
   };
 };
-export const roles = {
-  admin: "admin",
-  user: "user",
-};
-export const otpTypes = {
-  greeting: "greeting",
-  confirmation: "confirmation",
-  resetPassword: "resetPassword",
-  confirmNewEmail: "confirmNewEmail",
-  confirmNewPassword: "confirmNewPassword",
-  deleteAccount: "deleteAccount",
+
+export const fieldLength = ({ fieldName = "", min = 0, max = 0 } = {}) => {
+  return {
+    min: {
+      value: min,
+      msg: `${fieldName}} Can't Be less Then ${min} Charactors`,
+    },
+    max: {
+      value: max,
+      msg: `${fieldName} Can't Be more Then ${max} Charactors`,
+    },
+  };
 };
 
 export const defaultValues = {

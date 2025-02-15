@@ -1,4 +1,4 @@
-import Post from "../../Post.model.js";
+import Post from "../../Post/Post.model.js";
 
 export const post_findOneAndDelete = async function (doc, next) {
   const { _id } = doc;

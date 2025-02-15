@@ -1,6 +1,6 @@
 // Routers :
 import { Router } from "express";
-import replyRouter from "../reply/replie.controller.js";
+import replyRouter from "../reply/reply.controller.js";
 
 // Services :
 import {

@@ -1,5 +1,6 @@
-import mongoose, { Schema, Types, model } from "mongoose";
-import * as fieldOptions from "../Options/field.length.js";
+import { Schema, Types } from "mongoose";
+import { contentLength } from "../Validation/Comment.validation.js";
+import { fieldLength } from "../../../Options/field.validation.js";
 
 const commentSchema = new Schema(
   {
@@ -15,13 +16,13 @@ const commentSchema = new Schema(
       },
 
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Content",
-          max: fieldOptions.contentLength.max,
+          max: contentLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Content",
-          max: fieldOptions.contentLength.max,
+          max: contentLength.max,
         }).max.msg,
       ],
     },
@@ -37,11 +38,4 @@ const commentSchema = new Schema(
   }
 );
 
-commentSchema.post("findOneAndDelete", async function (doc, next) {
-  const commentID = doc._id;
-  await mongoose.models.Comment.deleteMany({ onComment: commentID });
-});
-
-const Comment = model("comment", commentSchema);
-
-export default Comment;
+export default commentSchema;

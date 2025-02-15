@@ -1,6 +1,6 @@
 import Group from "../../../../DB/Models/Group/Group.model.js";
 import User from "../../../../DB/Models/User/User.model.js";
-import { roles } from "../../../../DB/Options/field.validation.js";
+import { roles } from "../../../../DB/Models/User/Validation/User.validation.js";
 import { asnycHandler } from "../../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../../Utils/Messages/messages.generator.js";
 import { successResponse } from "../../../../Utils/Res/success.response.js";

@@ -1,8 +1,13 @@
 import { Schema, Types } from "mongoose";
 import * as regex from "../../../../Utils/Validation/validators/regex.patterns.js";
-import * as fieldOptions from "../../../Options/field.length.js";
 import * as fieldValidation from "../../../Options/field.validation.js";
 import { generateMessage } from "../../../../Utils/Messages/messages.generator.js";
+import {
+  bioLength,
+  passwordLength,
+  roles,
+  userNameLength,
+} from "../Validation/User.validation.js";
 
 const userSchema = new Schema(
   {
@@ -17,23 +22,23 @@ const userSchema = new Schema(
         message: generateMessage("userName").errors.invalidFormate.error,
       },
       minlength: [
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "userName",
-          min: fieldOptions.userNameLength.min,
+          min: userNameLength.min,
         }).min.value,
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "userName",
-          min: fieldOptions.userNameLength.min,
+          min: userNameLength.min,
         }).min.msg,
       ],
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "userName",
-          max: fieldOptions.userNameLength.max,
+          max: userNameLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "userName",
-          max: fieldOptions.userNameLength.max,
+          max: userNameLength.max,
         }).max.msg,
       ],
       unique: [true, generateMessage("userName").errors.alreadyExist.error],
@@ -64,23 +69,23 @@ const userSchema = new Schema(
     password: {
       type: String,
       minlength: [
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Password",
-          min: fieldOptions.passwordLength.min,
+          min: passwordLength.min,
         }).min.value,
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Password",
-          min: fieldOptions.passwordLength.min,
+          min: passwordLength.min,
         }).min.msg,
       ],
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Password",
-          max: fieldOptions.passwordLength.max,
+          max: passwordLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Password",
-          max: fieldOptions.passwordLength.max,
+          max: passwordLength.max,
         }).max.msg,
       ],
       validate: {
@@ -111,13 +116,13 @@ const userSchema = new Schema(
     bio: {
       type: String,
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Bio",
-          max: fieldOptions.bioLength.max,
+          max: bioLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldValidation.fieldLength({
           fieldName: "Bio",
-          max: fieldOptions.bioLength.max,
+          max: bioLength.max,
         }).max.msg,
       ],
       trim: true,
@@ -126,10 +131,10 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: {
-        values: Object.values(fieldValidation.roles),
+        values: Object.values(roles),
         message: generateMessage().errors.enums.error,
       },
-      default: fieldValidation.roles.user,
+      default: roles.user,
     },
 
     // Posts :

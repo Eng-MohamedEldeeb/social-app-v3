@@ -1,14 +1,8 @@
+// Routers :
 import { Router } from "express";
-import * as profileService from "./services/profile.service.js";
-import * as profileSelection from "./profile.select.js";
-import * as profileValidation from "./profile.validation.js";
-import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
-import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
-import { validation } from "../../Utils/Validation/validation.js";
-import { fileReader } from "../../Utils/Upload/fileReader.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
-import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
-import { otpTypes } from "../../DB/Options/field.validation.js";
+
+// Services :
+
 import {
   getProfile,
   getProfileFollowers,
@@ -28,6 +22,23 @@ import {
   changePassword,
   confirmNewPassword,
 } from "./services/changePassword.service.js";
+
+// Selections :
+import * as profileSelection from "./profile.select.js";
+
+// Validations :
+import * as profileValidation from "./profile.validation.js";
+import { validation } from "../../Utils/Validation/validation.js";
+import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
+import { otpTypes } from "../../DB/Models/OTP/Validation/OTP.validation.js";
+
+// Files :
+import { fileReader } from "../../Utils/Upload/fileReader.js";
+import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
+
+// Authorizations :
+import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
+import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 
 const router = Router();
 

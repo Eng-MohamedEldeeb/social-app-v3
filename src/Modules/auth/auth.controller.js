@@ -16,7 +16,7 @@ import * as authValidators from "./auth.validation.js";
 import { isExisted } from "../../Middlewares/auth/isExisted.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
-import { otpTypes } from "../../DB/Options/field.validation.js";
+import { otpTypes } from "../../DB/Models/OTP/Validation/OTP.validation.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 
 // Files :

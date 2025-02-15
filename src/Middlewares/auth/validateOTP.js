@@ -1,4 +1,4 @@
-import OTP from "../../DB/Models/OTP.model.js";
+import OTP from "../../DB/Models/OTP/OTP.model.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";

@@ -1,4 +1,4 @@
-import { roles } from "../../DB/Options/field.validation.js";
+import { roles } from "../../DB/Models/User/Validation/User.validation.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 
 export const replyAuthorization = asnycHandler((req, res, next) => {

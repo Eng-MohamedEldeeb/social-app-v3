@@ -1,9 +1,9 @@
-import OTP from "../../../DB/Models/OTP.model.js";
+import OTP from "../../../DB/Models/OTP/OTP.model.js";
+import { otpTypes } from "../../../DB/Models/OTP/Validation/OTP.validation.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
-import { otpTypes } from "../../../DB/Options/field.validation.js";
 
 // Confirm E-mail:
 export const confirmEmail = asnycHandler(async (req, res, next) => {

@@ -1,4 +1,4 @@
-import Post from "../../../DB/Models/Post.model.js";
+import Post from "../../../DB/Models/Post/Post.model.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
 

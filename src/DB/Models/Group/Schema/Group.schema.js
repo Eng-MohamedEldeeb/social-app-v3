@@ -1,10 +1,10 @@
 import { Types, Schema } from "mongoose";
-import * as fieldOptions from "../../../Options/field.length.js";
 import {
   groupInfoLength,
   groupNameLength,
 } from "../Validation/Group.validation.js";
 import { generateMessage } from "../../../../Utils/Messages/messages.generator.js";
+import { fieldLength } from "../../../Options/field.validation.js";
 
 const groupSchema = new Schema(
   {
@@ -27,7 +27,7 @@ const groupSchema = new Schema(
 
       minlength: [
         groupNameLength.min,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Group Description",
           max: groupNameLength.min,
         }).min.msg,
@@ -35,7 +35,7 @@ const groupSchema = new Schema(
 
       maxlength: [
         groupNameLength.max,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Group Description",
           max: groupNameLength.max,
         }).max.msg,
@@ -49,7 +49,7 @@ const groupSchema = new Schema(
 
       maxlength: [
         groupInfoLength.max,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Group Description",
           max: groupInfoLength.max,
         }).max.msg,

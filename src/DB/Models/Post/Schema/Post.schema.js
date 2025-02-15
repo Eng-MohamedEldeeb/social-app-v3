@@ -1,7 +1,7 @@
-import mongoose, { Schema, Types, model } from "mongoose";
-import * as fieldOptions from "../Options/field.length.js";
-import { generateMessage } from "../../Utils/Messages/messages.generator.js";
-import Comment from "./Comment.model.js";
+import { Schema, Types } from "mongoose";
+import { generateMessage } from "../../../../Utils/Messages/messages.generator.js";
+import { fieldLength } from "../../../Options/field.validation.js";
+import { contentLength, titleLength } from "../Validation/Post.validation.js";
 
 const postSchema = new Schema(
   {
@@ -17,13 +17,13 @@ const postSchema = new Schema(
       },
 
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Title",
-          max: fieldOptions.titleLength.max,
+          max: titleLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Title",
-          max: fieldOptions.titleLength.max,
+          max: titleLength.max,
         }).max.msg,
       ],
     },
@@ -35,13 +35,13 @@ const postSchema = new Schema(
       },
 
       maxlength: [
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Content",
-          max: fieldOptions.contentLength.max,
+          max: contentLength.max,
         }).max.value,
-        fieldOptions.fieldLength({
+        fieldLength({
           fieldName: "Post Content",
-          max: fieldOptions.contentLength.max,
+          max: contentLength.max,
         }).max.msg,
       ],
     },
@@ -65,11 +65,4 @@ const postSchema = new Schema(
   }
 );
 
-postSchema.post("findOneAndDelete", async function (doc, next) {
-  const postID = doc._id;
-  await Comment.deleteMany({ post: postID });
-});
-
-const Post = model("post", postSchema);
-
-export default Post;
+export default postSchema;

@@ -1,7 +1,7 @@
 // Models :
-import OTP from "../../OTP.model.js";
-import Post from "../../Post.model.js";
-import Comment from "../../Comment.model.js";
+import OTP from "../../OTP/OTP.model.js";
+import Post from "../../Post/Post.model.js";
+import Comment from "../../Comment/Comment.model.js";
 
 // Validations :
 import * as fieldValidation from "../../../Options/field.validation.js";
@@ -13,6 +13,7 @@ import { encryptValue, hashValue } from "../../../../Utils/Security/hash.js";
 // Utils :
 import sendEmail from "../../../../Utils/Emails/email.event.js";
 import cloud from "../../../../Utils/Upload/Cloudinary/Config/cloud.config.js";
+import { otpTypes } from "../../OTP/Validation/OTP.validation.js";
 
 export const pre_save = async function (next) {
   if (this.isModified("password")) {
@@ -45,7 +46,7 @@ export const pre_findOneAndUpdate = async function (next) {
     });
   }
   if (updatedDoc.tempEmail) {
-    const otpType = fieldValidation.otpTypes.confirmNewEmail;
+    const otpType = otpTypes.confirmNewEmail;
 
     const otpCode = await OTP.create({
       otpType,
