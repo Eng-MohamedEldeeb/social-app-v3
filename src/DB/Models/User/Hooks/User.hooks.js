@@ -1,7 +1,6 @@
 // Models :
 import OTP from "../../OTP/OTP.model.js";
 import Post from "../../Post/Post.model.js";
-import Comment from "../../Comment/Comment.model.js";
 
 // Validations :
 import * as fieldValidation from "../../../Options/field.validation.js";
@@ -80,7 +79,6 @@ export const post_findOneAndDelete = async function (doc, next) {
 
   await Promise.allSettled([
     Post.deleteMany(userData),
-    Comment.deleteMany(userData),
     OTP.findOneAndDelete({ email: doc.email }),
   ]);
 };

@@ -47,12 +47,12 @@ router.post(
   fileReader({ fileType: fileTypes.img }).single("avatar"),
   validation({
     schema: authValidators.register,
-    otp: "registeration",
+    otp: "confirmation-code",
     token: false,
   }),
   validateOTP({
     otpType: otpTypes.confirmation,
-    otpFieldName: "registeration",
+    otpFieldName: "confirmation-code",
   }),
   register
 );
@@ -91,12 +91,12 @@ router.put(
   "/reset-password",
   validation({
     schema: authValidators.resetPassword,
-    otp: "reset-password",
+    otp: "confirmation-code",
     token: false,
   }),
   validateOTP({
     otpType: otpTypes.resetPassword,
-    otpFieldName: "reset-password",
+    otpFieldName: "confirmation-code",
   }),
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
