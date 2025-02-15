@@ -46,6 +46,8 @@ export const followUser = {
     _id: 1,
     following: 1,
     isDeactivated: 1,
+isPrivate: 1,
+requests: 1,
   },
 };
 
