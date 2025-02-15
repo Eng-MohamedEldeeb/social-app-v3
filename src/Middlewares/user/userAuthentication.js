@@ -58,6 +58,7 @@ export const userAuthentication = ({
         privateProfile,
         followers,
         following,
+requests,
       } = user;
       req.searchedUser = {
         userName,
@@ -65,6 +66,7 @@ export const userAuthentication = ({
         privateProfile,
         followers: followers.length,
         following: following.length,
+requests
       };
       return next();
     }
