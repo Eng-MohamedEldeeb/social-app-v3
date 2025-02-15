@@ -11,6 +11,12 @@ export const followUser = asnycHandler(async (req, res, next) => {
   // Profile Id:
   const { _id: profileID } = req.user;
 
+// Followed User Data :
+const searchedUser = req.searchedUser
+
+// If The Followed User Profile Is Private :
+if(searchedUser.isPrivate){/* logic*/}
+
   // Updating Followed User Followers List:
   const followedUser = await User.findOneAndUpdate(
     { _id: userId, isDeactivated: { $exists: false } },
