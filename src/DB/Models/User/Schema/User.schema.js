@@ -168,6 +168,9 @@ const userSchema = new Schema(
     // Profile Status :
     privateProfile: Boolean,
     isDeactivated: Boolean,
+
+// Profile Requests :
+requests: {[type: Types.ObjectId, ref: "user"]}
   },
   {
     timestamps: true,
