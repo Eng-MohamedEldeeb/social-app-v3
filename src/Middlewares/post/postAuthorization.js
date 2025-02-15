@@ -1,6 +1,6 @@
-import { roles } from "../../DB/Models/User/Validation/User.validation.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
+import { errorResponse } from "../../Utils/Res/error.response.js";
 
 export const postAuthorization = asnycHandler((req, res, next) => {
   // Users's Data
@@ -10,7 +10,7 @@ export const postAuthorization = asnycHandler((req, res, next) => {
   const { owner, allowComments } = req.post;
 
   //! If The User Aren't The Post's Owner nor Admin :
-  if (!owner.equals(_id) || (role != roles.admin && !owner.equals(_id)))
+  if (!owner.equals(_id))
     return errorResponse(
       { next },
       {
@@ -20,13 +20,13 @@ export const postAuthorization = asnycHandler((req, res, next) => {
     );
 
   //! If The Comment Wasn't Allowing For Comments :
-  if (!allowComments)
-    return errorResponse(
-      { next },
-      {
-        error: generateMessage("Comment").errors.notAllowed.error,
-        status: generateMessage("Comment").errors.notAllowed.status,
-      }
-    );
+  // if (!allowComments)
+  //   return errorResponse(
+  //     { next },
+  //     {
+  //       error: generateMessage("Comment").errors.notAllowed.error,
+  //       status: generateMessage("Comment").errors.notAllowed.status,
+  //     }
+  //   );
   return next();
 });

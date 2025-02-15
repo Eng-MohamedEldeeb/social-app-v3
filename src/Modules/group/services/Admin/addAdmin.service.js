@@ -35,6 +35,15 @@ export const addAdmin = asnycHandler(async (req, res, next) => {
       }
     );
 
+  if (
+    req.user._id.equals(user) ||
+    !req.group.admins.some((admin) => admin.equals(req.user._id))
+  )
+    return errorResponse(
+      { next },
+      { error: generateMessage().errors.notAllowed.error, status: 403 }
+    );
+
   // Group Admins List Update :
   const data = await Group.findByIdAndUpdate(
     id,

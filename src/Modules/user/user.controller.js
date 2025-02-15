@@ -12,6 +12,11 @@ import {
 import { followUser, unfollowUser } from "./services/userFollowing.service.js";
 import { blockUser, unblockUser } from "./services/userBlocking.service.js";
 import { groupJoin } from "./services/groupJoin.service.js";
+import {
+  confirmDeleteAccount,
+  requestDeleteAccount,
+} from "./services/requestDeleteAccount.service.js";
+import { deactivateAccount } from "./services/deactivateAccount.service.js";
 
 // Selections :
 import * as userSelection from "./user.select.js";
@@ -28,6 +33,61 @@ import { userAuthentication } from "../../Middlewares/user/userAuthentication.js
 const router = Router();
 
 router.use("/profile", profileRouter);
+
+/**
+ * @method POST
+ * @link /user/account/request-delete
+ * @description Request Deleting Account
+ **/
+router.post(
+  "/account/request-delete",
+  validation({
+    schema: userValidation.requestDeleteAccount,
+    token: "authorization",
+  }),
+  isAuthorized,
+  isAuthenticated({
+    select: userSelection.requestDeleteAccount.select,
+  }),
+  requestDeleteAccount
+);
+
+/**
+ * @method DELETE
+ * @link /user/profile
+ * @description Delete Account Forever
+ **/
+router.delete(
+  "/account/confirm-delete",
+  isAuthorized,
+  isAuthenticated({
+    select: userSelection.confirmDeleteAccount.select,
+  }),
+  validation({
+    schema: userValidation.confirmDeleteAccount,
+    token: "authorization",
+    otp: "confirmation-code",
+  }),
+  confirmDeleteAccount
+);
+
+/**
+ * @method DELETE
+ * @link /user/account/request-delete
+ * @description Request Deleting Account
+ **/
+router.delete(
+  "/account/deactivate",
+  validation({
+    schema: userValidation.deactivateAccount,
+    token: "authorization",
+  }),
+  isAuthorized,
+  isAuthenticated({
+    select: userSelection.deactivateAccount.select,
+  }),
+  deactivateAccount
+);
 
 /**
  * @method GET

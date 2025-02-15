@@ -9,7 +9,11 @@ export const userAuthentication = ({
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
     const { userId } = { ...req.params, ...req.query };
-    const user = await User.findById({ _id: userId }, select, options);
+    const user = await User.findById(
+      { _id: userId, isDeactivated: { $exists: false } },
+      select,
+      options
+    );
 
     //! If The User Wasn't Found:
     if (!user)
@@ -50,14 +54,14 @@ export const userAuthentication = ({
       const {
         // fullName,
         userName,
-        profilePicture,
+        avatar,
         privateProfile,
         followers,
         following,
       } = user;
       req.searchedUser = {
         userName,
-        profilePicture,
+        avatar,
         privateProfile,
         followers: followers.length,
         following: following.length,

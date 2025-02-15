@@ -3,7 +3,7 @@ import * as emailSchema from "../Schemas/email.schema.js";
 
 export const emailTypes = {
   greeting: "greeting",
-  confirmation: "confirmation",
+  confirmEmail: "confirmEmail",
   verifyEmail: "verifyEmail",
   resetPassword: "resetPassword",
   changePassword: "changePassword",
@@ -17,28 +17,7 @@ export const sendEmailHandler = async ({
   otp = "",
 } = {}) => {
   try {
-    switch (emailType) {
-      case emailTypes.greeting:
-        await transporter.sendMail(
-          emailSchema.greetingEmail({ email, userName })
-        );
-        break;
-      case emailTypes.confirmation:
-        await transporter.sendMail(emailSchema.confirmEmail({ email, otp }));
-        break;
-      case emailTypes.verifyEmail:
-        await transporter.sendMail(emailSchema.verifyEmail({ email, otp }));
-        break;
-      case emailTypes.resetPassword:
-        await transporter.sendMail(emailSchema.resetPassword({ email, otp }));
-        break;
-      case emailTypes.changePassword:
-        await transporter.sendMail(emailSchema.changePassword({ email, otp }));
-        break;
-      case emailTypes.deleteAccount:
-        await transporter.sendMail(emailSchema.deleteAccount({ email, otp }));
-        break;
-    }
+    transporter.sendMail(emailSchema[emailType]({ email, userName, otp }));
   } catch (error) {
     console.error("NodeMailer Error:", error);
   }

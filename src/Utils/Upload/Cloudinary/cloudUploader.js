@@ -11,7 +11,7 @@ export const cloudUploader = async ({
     // Checking the Img Public_id
     // case 1- if true ? create a new folder
     // case 2 - if false ? don't create a new folder
-    const checkPicID = replaceWith == defaultValues.profilePicture.public_id;
+    const checkPicID = replaceWith == defaultValues.avatar.public_id;
 
     // Img Path in File System
     const { path } = req.file;

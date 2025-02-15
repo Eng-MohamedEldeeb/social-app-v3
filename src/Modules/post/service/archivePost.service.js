@@ -8,7 +8,7 @@ export const archivePost = asnycHandler(async (req, res, next) => {
   // Post's Id :
   const { postId } = req.params;
 
-  // Delete Post :
+  // Archive Post :
   const data = await Post.findByIdAndUpdate(
     postId,
     { isArchived: true },

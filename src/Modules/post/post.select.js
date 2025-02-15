@@ -27,7 +27,7 @@ export const commentRouter = {
 
 // Add Post Selection :
 export const addPost = {
-  isAuthenticated: { projection: { _id: 1 } },
+  isAuthenticated: { projection: { _id: 1, joinedGroups: 1 } },
 };
 
 // Edit Post Selection :

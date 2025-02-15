@@ -1,4 +1,7 @@
-import mongoose, { model } from "mongoose";
+import { model } from "mongoose";
+
+// Virtuals :
+import { age_virtual, fullName_virtual } from "./Virtuals/User.virtuals.js";
 
 // User Schema :
 import userSchema from "./Schema/User.schema.js";
@@ -9,6 +12,20 @@ import {
   pre_findOneAndUpdate,
   pre_save,
 } from "./Hooks/User.hooks.js";
+
+// Virtuals :
+
+/* Full Name */
+userSchema.virtual("fullName").get(fullName_virtual);
+
+/* BirthDate */
+userSchema.virtual("birthDate").set(age_virtual);
+
+userSchema.virtual("allPosts", {
+  ref: "post",
+  localField: "_id",
+  foreignField: "owner",
+});
 
 // Hooks :
 

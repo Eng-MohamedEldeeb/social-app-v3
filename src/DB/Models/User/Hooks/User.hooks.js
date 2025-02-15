@@ -45,7 +45,7 @@ export const pre_findOneAndUpdate = async function (next) {
     });
   }
   if (updatedDoc.tempEmail) {
-    const otpType = otpTypes.confirmNewEmail;
+    const otpType = otpTypes.verifyEmail;
 
     const otpCode = await OTP.create({
       otpType,
@@ -67,15 +67,11 @@ export const pre_findOneAndUpdate = async function (next) {
 };
 
 export const post_findOneAndDelete = async function (doc, next) {
-  const { _id, profilePicture } = doc;
+  const { _id, avatar } = doc;
   const userData = { owner: _id };
-  console.log(this.getFilter());
 
-  if (
-    profilePicture.public_id !=
-    fieldValidation.defaultValues.profilePicture.public_id
-  )
-    await cloud.uploader.destroy(profilePicture.public_id);
+  if (avatar.public_id != fieldValidation.defaultValues.avatar.public_id)
+    await cloud.uploader.destroy(avatar.public_id);
 
   await Promise.allSettled([
     Post.deleteMany(userData),

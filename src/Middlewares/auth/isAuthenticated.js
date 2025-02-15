@@ -2,13 +2,22 @@ import User from "../../DB/Models/User/User.model.js";
 import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";
-import { decryptValue } from "../../Utils/Security/hash.js";
 
-export const isAuthenticated = ({ select = "", options = {} } = {}) => {
+export const isAuthenticated = ({
+  select = "",
+  options = {},
+  inlcudeDeacivated = false,
+} = {}) => {
   return asnycHandler(async (req, res, next) => {
+    // Token :
     const { _id } = req.token;
 
-    const user = await User.findById(_id, select, options);
+    // User Searching :
+    const user = await User.findOne(
+      { _id, isDeactivated: { $exists: inlcudeDeacivated } },
+      select,
+      { lean: true, ...options }
+    );
 
     //! If The User Wasn't Found:
     if (!user) {
@@ -42,10 +51,7 @@ export const isAuthenticated = ({ select = "", options = {} } = {}) => {
       return errorResponse({ next }, { error, status });
     }
 
-    req.user = {
-      ...user,
-      ...(user.phone && { phone: decryptValue({ payload: user.phone }) }),
-    };
+    req.user = user;
 
     return next();
   });

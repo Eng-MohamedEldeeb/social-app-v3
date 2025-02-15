@@ -10,7 +10,16 @@ import { folderTypes } from "../../../Utils/Upload/Cloudinary/Config/uploading.o
 // Add Post:
 export const addPost = asnycHandler(async (req, res, next) => {
   // Owner Id:
-  const { _id } = req.user;
+  const { _id, joinedGroups } = req.user;
+
+  // Group Id :
+  const { groupId } = req.params;
+
+  if (groupId && !joinedGroups.some((group) => group.equals(groupId)))
+    return errorResponse(
+      { next },
+      { error: "Can't Post On Group You Are Not Joined", status: 400 }
+    );
 
   // Post Data:
   const postData = req.body;
@@ -26,6 +35,7 @@ export const addPost = asnycHandler(async (req, res, next) => {
           ...postData,
           owner: _id,
           attachment: { public_id: pic.public_id, secure_url: pic.secure_url },
+          onGroup: groupId,
         });
 
         return successResponse(
@@ -46,12 +56,7 @@ export const addPost = asnycHandler(async (req, res, next) => {
   const data = await Post.create({
     ...postData,
     owner: _id,
-  });
-
-  const updatedUser = await User.findByIdAndUpdate(_id, {
-    $push: {
-      posts: data,
-    },
+    onGroup: groupId,
   });
 
   return successResponse(

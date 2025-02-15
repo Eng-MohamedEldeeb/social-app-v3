@@ -29,6 +29,9 @@ export const getGroup = asnycHandler(async (req, res, next) => {
             path: "members",
             select: { userName: 1 },
           },
+          {
+            path: "posts",
+          },
         ],
         lean: true,
       }
@@ -70,6 +73,9 @@ export const getGroup = asnycHandler(async (req, res, next) => {
         {
           path: "admins",
           select: { userName: 1 },
+        },
+        {
+          path: "posts",
         },
       ],
       lean: true,

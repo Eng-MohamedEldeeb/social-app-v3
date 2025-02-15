@@ -7,25 +7,31 @@ import { successResponse } from "../../../Utils/Res/success.response.js";
 
 // Reset Password:
 export const resetPassword = asnycHandler(async (req, res, next) => {
+  // E-mai & New Password Info :
   const { email, newPassword } = req.body;
-  const { passwords } = req.user;
-  const successMsg = generateMessage("Password").success.updated;
 
+  // Used Passwords List :
+  const { password: oldPassword, passwords } = await User.findOne({ email })
+    .lean()
+    .select({ password: 1, passwords: 1 });
+
+  // Check If The New Password Was As The Old One :
+  const checkConflictedPasswords = compareValue({
+    plainText: newPassword,
+    cryptedValue: oldPassword,
+  });
+
+  // Check If The New Password Was Already Used By The User :
   const checkExistedPassword = passwords.some((pass) =>
     compareValue({ plainText: newPassword, cryptedValue: pass })
   );
 
-  if (
-    compareValue({
-      plainText: newPassword,
-      cryptedValue: req.user.password,
-    }) ||
-    checkExistedPassword
-  ) {
-    const { error, status } = generateMessage().errors.conflictedPasswords;
-
-    return errorResponse({ next }, { error, status });
-  }
+  // Check For Both Passwords Conditions :
+  if (checkConflictedPasswords || checkExistedPassword)
+    return errorResponse(
+      { next },
+      { error: generateMessage().errors.conflictedPasswords.error, status: 409 }
+    );
 
   const data = await User.findOneAndUpdate(
     { email },
@@ -39,8 +45,8 @@ export const resetPassword = asnycHandler(async (req, res, next) => {
   return successResponse(
     { res },
     {
-      msg: successMsg.msg,
-      status: successMsg.status,
+      msg: generateMessage("Password").success.updated.msg,
+      status: 200,
       data,
     }
   );

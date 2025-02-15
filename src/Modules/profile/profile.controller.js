@@ -9,10 +9,6 @@ import {
   getProfileFollowing,
 } from "./services/getProfile.service.js";
 import { togglePrivateProfile } from "./services/privateProfile.service.js";
-import {
-  confirmDeleteProfile,
-  deleteProfile,
-} from "./services/deleteProfile.service.js";
 import { twoStepsVerification } from "./services/twoStepsVerification.service.js";
 import {
   confirmNewEmail,
@@ -51,10 +47,8 @@ router.get(
   "/",
   isAuthorized,
   isAuthenticated({
-    options: {
-      projection: profileSelection.getProfile.projection,
-      populate: profileSelection.getProfile.populate,
-    },
+    select: profileSelection.getProfile.select,
+    options: profileSelection.getProfile.options,
   }),
   getProfile
 ); //✅
@@ -68,7 +62,7 @@ router.get(
   "/followers",
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.getProfileFollowers.projection },
+    select: profileSelection.getProfileFollowers.select,
   }),
   getProfileFollowers
 ); //✅
@@ -82,78 +76,11 @@ router.get(
   "/following",
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.getProfileFollowing.projection },
+    select: profileSelection.getProfileFollowing.select,
   }),
   getProfileFollowing
 ); //✅
-/**
- * @method PATCH
- * @link /user/profile/privacy
- * @description Change User's Own Profile Privacy
- **/
-router.put(
-  "/privacy",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: profileSelection.togglePrivateProfile.projection },
-  }),
-  togglePrivateProfile
-); //✅
 
-/**
- * @method POST
- * @link /user/profile/delete-forever
- * @description Delete Account Forever
- **/
-router.post(
-  "/delete-forever",
-  validation({
-    schema: profileValidation.deleteProfile,
-    token: "authorization",
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: profileSelection.deleteProfile.projection },
-  }),
-  deleteProfile
-);
-
-/**
- * @method DELETE
- * @link /user/profile
- * @description Delete Account Forever
- **/
-router.delete(
-  "/",
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: profileSelection.confirmDeleteProfile.projection },
-  }),
-  validation({
-    schema: profileValidation.confirmDeleteProfile,
-    token: "authorization",
-    otp: "confirmation-code",
-  }),
-  confirmDeleteProfile
-);
-
-/**
- * @method PUT
- * @link /user/profile/2-steps-verification
- * @description Add 2 Steps Verification
- **/
-router.put(
-  "/2-steps-verification",
-
-  validation({
-    schema: profileValidation.confirmNewEmail,
-  }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: profileSelection.confirmNewEmail.projection },
-  }),
-  twoStepsVerification
-);
 /**
  * @method PATCH
  * @link /user/profile/edit
@@ -168,9 +95,23 @@ router.patch(
   }),
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.updateProfile.projection },
+    select: profileSelection.updateProfile.select,
   }),
   updateProfile
+); //✅
+
+/**
+ * @method PATCH
+ * @link /user/profile/privacy
+ * @description Change User's Own Profile Privacy
+ **/
+router.put(
+  "/privacy",
+  isAuthorized,
+  isAuthenticated({
+    select: profileSelection.togglePrivateProfile.select,
+  }),
+  togglePrivateProfile
 ); //✅
 
 /**
@@ -187,10 +128,10 @@ router.put(
   }),
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.confirmNewEmail.projection },
+    select: profileSelection.confirmNewEmail.select,
   }),
   validateOTP({
-    otpType: otpTypes.confirmNewEmail,
+    otpType: otpTypes.verifyEmail,
     otpFieldName: "confirmation-code",
   }),
   confirmNewEmail
@@ -205,7 +146,7 @@ router.post(
   "/change-password",
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.changePassword.projection },
+    select: profileSelection.changePassword.select,
   }),
   changePassword
 ); //✅
@@ -223,9 +164,25 @@ router.put(
   }),
   isAuthorized,
   isAuthenticated({
-    options: { projection: profileSelection.confirmNewPassword.projection },
+    select: profileSelection.confirmNewPassword.select,
   }),
   confirmNewPassword
 ); //✅
 
+/**
+ * @method PUT
+ * @link /user/profile/2-steps-verification
+ * @description Add 2 Steps Verification
+ **/
+router.put(
+  "/2-steps-verification",
+  validation({
+    schema: profileValidation.confirmNewEmail,
+  }),
+  isAuthorized,
+  isAuthenticated({
+    // select: profileSelection.twoStepsVerification.select,
+  }),
+  twoStepsVerification
+);
 export default router;

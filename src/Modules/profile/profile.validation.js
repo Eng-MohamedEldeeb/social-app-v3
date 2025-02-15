@@ -23,6 +23,8 @@ export const confirmNewEmail = joi
   .object()
   .keys({
     ["confirmation-code"]: generalFields.otp.required(),
+    ["authorization"]: generalFields.token.required(),
+
     newEmail: generalFields.email.required(),
   })
   .required();
@@ -39,24 +41,5 @@ export const confirmNewPassword = joi
       .valid(joi.ref("newPassword"))
       .required(),
     ["confirmation-code"]: generalFields.otp.required(),
-  })
-  .required();
-
-// Request Delete Profile:
-export const deleteProfile = joi
-  .object()
-  .keys({
-    email: generalFields.email.required(),
-    password: generalFields.password.required(),
-    ["authorization"]: generalFields.token.required(),
-  })
-  .required();
-
-// Confirm New Password User:
-export const confirmDeleteProfile = joi
-  .object()
-  .keys({
-    ["confirmation-code"]: generalFields.otp.required(),
-    ["authorization"]: generalFields.token.required(),
   })
   .required();

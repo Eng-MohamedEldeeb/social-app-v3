@@ -4,18 +4,21 @@ import { generalFields } from "../../Utils/Validation/validators/general.fields.
 export const getUserProfile = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
 export const getUserFollowers = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
 export const getUserFollowing = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
@@ -24,6 +27,7 @@ export const getUserFollowing = joi
 export const followUser = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
@@ -32,6 +36,7 @@ export const followUser = joi
 export const unfollowUser = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
@@ -40,6 +45,7 @@ export const unfollowUser = joi
 export const blockUser = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
@@ -48,6 +54,7 @@ export const blockUser = joi
 export const unblockUser = joi
   .object()
   .keys({
+    ["authorization"]: generalFields.token.required(),
     userId: generalFields.id.required(),
   })
   .required();
@@ -57,6 +64,33 @@ export const groupJoin = joi
   .object()
   .keys({
     id: generalFields.id.required(),
+    ["authorization"]: generalFields.token.required(),
+  })
+  .required();
+
+// Request Delete Account:
+export const requestDeleteAccount = joi
+  .object()
+  .keys({
+    email: generalFields.email.required(),
+    password: generalFields.password.required(),
+    ["authorization"]: generalFields.token.required(),
+  })
+  .required();
+
+// Confirm Delete Account:
+export const confirmDeleteAccount = joi
+  .object()
+  .keys({
+    ["confirmation-code"]: generalFields.otp.required(),
+    ["authorization"]: generalFields.token.required(),
+  })
+  .required();
+
+// Deactivate Account :
+export const deactivateAccount = joi
+  .object()
+  .keys({
     ["authorization"]: generalFields.token.required(),
   })
   .required();

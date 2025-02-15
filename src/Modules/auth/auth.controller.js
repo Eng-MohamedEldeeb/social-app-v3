@@ -5,19 +5,14 @@ import { Router } from "express";
 import { confirmEmail } from "./service/confirmEmail.service.js";
 import { register } from "./service/register.service.js";
 import { login } from "./service/login.service.js";
-import { forgotPassword } from "./service/forgotPassword.service.js";
+import { requestChangePassword } from "./service/requestChangePassword.service.js";
 import { resetPassword } from "./service/resetPassword.service.js";
-
-// Selection :
-import * as authSelection from "./auth.select.js";
 
 // Validators :
 import * as authValidators from "./auth.validation.js";
-import { isExisted } from "../../Middlewares/auth/isExisted.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
 import { otpTypes } from "../../DB/Models/OTP/Validation/OTP.validation.js";
-import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 
 // Files :
 import { fileReader } from "../../Utils/Upload/fileReader.js";
@@ -33,7 +28,6 @@ const router = Router();
 router.post(
   "/confirm-email",
   validation({ schema: authValidators.confirmEmail, token: false }),
-  isExisted({ options: { projection: authSelection.confirmEmail.projection } }),
   confirmEmail
 );
 
@@ -51,7 +45,7 @@ router.post(
     token: false,
   }),
   validateOTP({
-    otpType: otpTypes.confirmation,
+    otpType: otpTypes.confirmEmail,
     otpFieldName: "confirmation-code",
   }),
   register
@@ -75,11 +69,8 @@ router.post(
  **/
 router.post(
   "/forgot-password",
-  validation({ schema: authValidators.forgotPassword, token: false }),
-  isAuthenticated({
-    options: { projection: authSelection.resetPassword.projection },
-  }),
-  forgotPassword
+  validation({ schema: authValidators.requestChangePassword, token: false }),
+  requestChangePassword
 );
 
 /**
@@ -97,9 +88,6 @@ router.put(
   validateOTP({
     otpType: otpTypes.resetPassword,
     otpFieldName: "confirmation-code",
-  }),
-  isAuthenticated({
-    options: { projection: authSelection.resetPassword.projection },
   }),
   resetPassword
 );

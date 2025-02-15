@@ -7,7 +7,7 @@ import { errorResponse } from "../../../Utils/Res/error.response.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
 import { compareValue } from "../../../Utils/Security/hash.js";
 
-export const deleteProfile = asnycHandler(async (req, res, next) => {
+export const requestDeleteAccount = asnycHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const { password: dbPassword, email: dbEmail } = req.user;
 
@@ -54,15 +54,14 @@ export const deleteProfile = asnycHandler(async (req, res, next) => {
   );
 }); //✅
 
-export const confirmDeleteProfile = asnycHandler(async (req, res, next) => {
+export const confirmDeleteAccount = asnycHandler(async (req, res, next) => {
   const data = await User.findByIdAndDelete(req.user._id);
   if (!data)
     return errorResponse(
       { next },
       {
-        error,
-        error: generateMessage("Account").errors.notFound,
-        status: generateMessage("Account").errors.notFound.status,
+        error: generateMessage("Account").errors.notFound.error,
+        status: 404,
       }
     );
 

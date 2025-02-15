@@ -76,12 +76,11 @@ const groupSchema = new Schema(
 
     // Members :
     members: [{ type: Types.ObjectId, ref: "user" }],
-
-    // Posts :
-    posts: [{ type: Types.ObjectId, ref: "post" }],
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 

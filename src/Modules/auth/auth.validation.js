@@ -12,6 +12,10 @@ export const confirmEmail = joi
 export const register = joi
   .object()
   .keys({
+    firstName: joi.string(),
+    lastName: joi.string(),
+    birthDate: joi.date().less("now"),
+
     userName: generalFields.userName.required(),
     email: generalFields.email.required(),
     password: generalFields.password.required(),
@@ -19,13 +23,15 @@ export const register = joi
       .valid(joi.ref("password"))
       .required(),
     phone: generalFields.phone.required(),
+
     file: joi.object().keys({
       ...generalFields.file,
       mimetype: generalFields.fileType.mimetype
         .valid(...fileTypes.img)
         .required(),
     }),
-    registeration: generalFields.otp.required(),
+
+    ["confirmation-code"]: generalFields.otp.required(),
   })
   .required();
 
@@ -37,7 +43,7 @@ export const login = joi
   })
   .required();
 
-export const forgotPassword = joi
+export const requestChangePassword = joi
   .object()
   .keys({
     email: generalFields.email.required(),
@@ -52,6 +58,6 @@ export const resetPassword = joi
     confirmNewPassword: generalFields.password
       .valid(joi.ref("newPassword"))
       .required(),
-    ["reset-password"]: generalFields.otp.required(),
+    ["confirmation-code"]: generalFields.otp.required(),
   })
   .required();

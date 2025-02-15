@@ -1,22 +1,24 @@
 // Get User's Own Profile:
 export const getProfile = {
-  projection: {
-    profilePicture: {
+  select: {
+    avatar: {
       public_id: 0,
     },
     password: 0,
     passwords: 0,
   },
-  populate: {
-    path: "posts",
-    select: {
-      attachment: {
-        public_id: 0,
+  options: {
+    populate: {
+      path: "allPosts",
+      select: {
+        attachment: {
+          public_id: 0,
+        },
       },
-    },
-    options: {
-      sort: {
-        createdAt: -1,
+      options: {
+        sort: {
+          createdAt: -1,
+        },
       },
     },
   },
@@ -24,23 +26,23 @@ export const getProfile = {
 
 // Get User's Own Profile Followers:
 export const getProfileFollowers = {
-  projection: {
+  select: {
     followers: 1,
   },
 };
 
 // Get User's Own Profile Following:
 export const getProfileFollowing = {
-  projection: {
+  select: {
     following: 1,
   },
 };
 
 // Update User's Own Profile:
 export const updateProfile = {
-  projection: {
+  select: {
     _id: 1,
-    profilePicture: 1,
+    avatar: 1,
     email: 1,
     isDeactivated: 1,
   },
@@ -48,7 +50,7 @@ export const updateProfile = {
 
 // Confirm E-mail:
 export const confirmNewEmail = {
-  projection: {
+  select: {
     _id: 1,
     tempEmail: 1,
     isDeactivated: 1,
@@ -57,31 +59,16 @@ export const confirmNewEmail = {
 
 // Toggle Private Profile:
 export const togglePrivateProfile = {
-  projection: {
+  select: {
     _id: 1,
     privateProfile: 1,
     isDeactivated: 1,
   },
 };
 
-// Request Delete User's Own Profile:
-export const deleteProfile = {
-  projection: {
-    _id: 1,
-    email: 1,
-    password: 1,
-  },
-};
-// Delete User's Own Profile:
-export const confirmDeleteProfile = {
-  projection: {
-    _id: 1,
-  },
-};
-
 // Change Password:
 export const changePassword = {
-  projection: {
+  select: {
     _id: 1,
     email: 1,
   },
@@ -89,7 +76,7 @@ export const changePassword = {
 
 // Delete User's Own Profile:
 export const confirmNewPassword = {
-  projection: {
+  select: {
     _id: 1,
     password: 1,
     passwords: 1,

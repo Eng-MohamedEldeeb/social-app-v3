@@ -3,10 +3,9 @@ export const otpLength = {
 };
 
 export const otpTypes = {
-  greeting: "greeting",
-  confirmation: "confirmation",
+  confirmEmail: "confirmEmail",
   resetPassword: "resetPassword",
-  confirmNewEmail: "confirmNewEmail",
+  verifyEmail: "verifyEmail",
   confirmNewPassword: "confirmNewPassword",
   deleteAccount: "deleteAccount",
 };

@@ -11,10 +11,19 @@ import {
 
 const userSchema = new Schema(
   {
-    // firstName: String,
-    // lastName: String,
-    // birthDate: Date,
+    // User Info :
+    firstName: {
+      type: String,
+      required: [true, generateMessage("First Name").errors.required.error],
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    age: Number,
 
+    // Username :
     userName: {
       type: String,
       validate: {
@@ -46,6 +55,7 @@ const userSchema = new Schema(
       trim: true,
     },
 
+    // Email :
     email: {
       type: String,
       validate: {
@@ -56,7 +66,6 @@ const userSchema = new Schema(
       required: [true, generateMessage("email").errors.required.error],
       trim: true,
     },
-
     tempEmail: {
       type: String,
       validate: {
@@ -65,7 +74,9 @@ const userSchema = new Schema(
       },
       trim: true,
     },
+    emailChangedAt: Date,
 
+    // Password :
     password: {
       type: String,
       minlength: [
@@ -93,8 +104,8 @@ const userSchema = new Schema(
         message: generateMessage("Password").errors.invalidFormate.error,
       },
     },
-
     passwords: [String],
+    passwordChangedAt: Date,
 
     phone: {
       type: String,
@@ -102,14 +113,14 @@ const userSchema = new Schema(
       trim: true,
     },
 
-    profilePicture: {
+    avatar: {
       secure_url: {
         type: String,
-        default: fieldValidation.defaultValues.profilePicture.secure_url,
+        default: fieldValidation.defaultValues.avatar.secure_url,
       },
       public_id: {
         type: String,
-        default: fieldValidation.defaultValues.profilePicture.public_id,
+        default: fieldValidation.defaultValues.avatar.public_id,
       },
     },
 
@@ -138,25 +149,33 @@ const userSchema = new Schema(
     },
 
     // Posts :
-    posts: [{ type: Types.ObjectId, ref: "post" }],
+    // posts: [{ type: Types.ObjectId, ref: "post" }],
 
     // Groups :
     createdGroups: [{ type: Types.ObjectId, ref: "group" }],
     joinedGroups: [{ type: Types.ObjectId, ref: "group" }],
 
-    // Users :
+    // Following-Followers :
     followers: [{ type: Types.ObjectId, ref: "user" }],
     following: [{ type: Types.ObjectId, ref: "user" }],
-    blockList: [{ type: Types.ObjectId, ref: "user" }],
-    viewrs: [{ type: Types.ObjectId, ref: "user" }],
 
-    emailChangedAt: Date,
-    passwordChangedAt: Date,
+    // Block List :
+    blockList: [{ type: Types.ObjectId, ref: "user" }],
+
+    // Profile Viewers :
+    viewers: [{ type: Types.ObjectId, ref: "user" }],
+
+    // Profile Status :
     privateProfile: Boolean,
     isDeactivated: Boolean,
   },
   {
     timestamps: true,
+    versionKey: false,
+
+    // Virtuals ;
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
   }
 );
 

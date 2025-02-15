@@ -1,4 +1,4 @@
-import mongoose, { model } from "mongoose";
+import { model } from "mongoose";
 
 // Group Schema :
 import groupSchema from "./Schema/Group.schema.js";
@@ -6,8 +6,13 @@ import groupSchema from "./Schema/Group.schema.js";
 // Hooks Funcs :
 import { post_findOneAndDelete } from "./Hooks/Group.hooks.js";
 
-// Hooks :
+groupSchema.virtual("posts", {
+  ref: "post",
+  localField: "_id",
+  foreignField: "onGroup",
+});
 
+// Hooks :
 /* Pre Delete*/
 groupSchema.post("findOneAndDelete", post_findOneAndDelete);
 

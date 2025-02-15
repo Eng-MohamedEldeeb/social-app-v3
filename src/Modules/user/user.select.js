@@ -7,7 +7,7 @@ export const getUserProfile = {
       phone: 0,
       password: 0,
       passwords: 0,
-      profilePicture: {
+      avatar: {
         public_id: 0,
       },
     },
@@ -81,5 +81,27 @@ export const groupJoin = {
   projection: {
     _id: 1,
     groups: 1,
+  },
+};
+
+// Request Delete User's Own Profile:
+export const requestDeleteAccount = {
+  select: {
+    _id: 1,
+    email: 1,
+    password: 1,
+  },
+};
+
+// Delete User's Own Profile:
+export const confirmDeleteAccount = {
+  select: {
+    _id: 1,
+  },
+};
+// Deactivate Account:
+export const deactivateAccount = {
+  select: {
+    _id: 1,
   },
 };

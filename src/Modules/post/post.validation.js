@@ -25,6 +25,9 @@ export const addPost = joi
     title: generalFields.title,
     content: generalFields.content,
 
+    // Group Id :
+    groupId: generalFields.id,
+
     // Token:
     ["authorization"]: generalFields.token.required(),
   })

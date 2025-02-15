@@ -44,7 +44,6 @@ router.post(
   validation({ schema: groupValidators.createGroup }),
   isAuthorized,
   isAuthenticated(),
-  groupAuthorization,
   createGroup
 );
 

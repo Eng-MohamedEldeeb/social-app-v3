@@ -16,10 +16,14 @@ export const postAuthentication = ({
     const { postId } = { ...req.params, ...req.query };
 
     // Search For The Requseted Post :
-    const postData = await Post.findOne({
-      _id: postId,
-    });
-    console.log(postData);
+    const postData = await Post.findOne(
+      {
+        _id: postId,
+        isArchived: { $exists: archivedField },
+      },
+      select,
+      options
+    );
 
     //! If The Post Wasn't Found :
     if (!postData)

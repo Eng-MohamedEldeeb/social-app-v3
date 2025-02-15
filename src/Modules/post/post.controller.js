@@ -31,7 +31,7 @@ import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.option
 const router = Router();
 
 /**
- * @link /:postID/comment
+ * @link /:postId/comment
  * @description Route To Comments Router
  **/
 router.use(
@@ -67,8 +67,8 @@ router.get(
 
 /**
  * @method GET
- * @link /post/:postID
- * @param /:postID
+ * @link /post/:postId
+ * @param /:postId
  * @description GET Single Post
  **/
 router.get(
@@ -110,12 +110,12 @@ router.post(
 
 /**
  * @method PATCH
- * @link /post/edit/:postID
- * @param /:postID
+ * @link /post/edit/:postId
+ * @param /:postId
  * @description Edit Post
  **/
 router.patch(
-  "/edit/:postID",
+  "/edit/:postId",
   isAuthorized,
   isAuthenticated({
     options: { projection: postSelection.editPost.isAuthenticated.projection },
@@ -136,12 +136,12 @@ router.patch(
 
 /**
  * @method DELETE
- * @link /post/archive/:postID
- * @param /:postID
+ * @link /post/archive/:postId
+ * @param /:postId
  * @description Archive Post
  **/
 router.delete(
-  "/archive/:postID",
+  "/archive/:postId",
   isAuthorized,
   isAuthenticated({
     options: {
@@ -164,12 +164,12 @@ router.delete(
 
 /**
  * @method PUT
- * @link /post/restore/:postID
- * @param /:postID
+ * @link /post/restore/:postId
+ * @param /:postId
  * @description Restore Post
  **/
 router.put(
-  "/restore/:postID",
+  "/restore/:postId",
   isAuthorized,
   isAuthenticated({
     options: {
@@ -192,12 +192,12 @@ router.put(
 
 /**
  * @method DELETE
- * @link /post/permanent-delete/:postID
- * @param /:postID
+ * @link /post/permanent-delete/:postId
+ * @param /:postId
  * @description Delete Post
  **/
 router.delete(
-  "/permanent-delete/:postID",
+  "/permanent-delete/:postId",
   isAuthorized,
   isAuthenticated({
     options: {
@@ -220,12 +220,12 @@ router.delete(
 
 /**
  * @method POST
- * @link /post/like-Unlike/:postID
- * @param /:postID
+ * @link /post/like-Unlike/:postId
+ * @param /:postId
  * @description Like Or Unlike Post
  **/
 router.post(
-  "/like-Unlike/:postID",
+  "/like-Unlike/:postId",
   isAuthorized,
   isAuthenticated({
     options: {

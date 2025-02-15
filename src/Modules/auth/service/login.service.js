@@ -1,25 +1,31 @@
+// DB Model :
 import User from "../../../DB/Models/User/User.model.js";
-import * as token from "../../../Utils/Security/token.js";
+
+// Utils :
+import { generateToken } from "../../../Utils/Security/token.js";
 import { compareValue } from "../../../Utils/Security/hash.js";
 import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../../Utils/Res/error.response.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
 
-// Login:
 export const login = asnycHandler(async (req, res, next) => {
+  // User Login Info :
   const { userName, password } = req.body;
 
-  const successMsg = generateMessage("User").success.loggedIn;
-  const errorMsg = generateMessage().errors.invalidCredentials;
+  // Searching For The User :
+  const user = await User.findOne({ userName })
+    .select({ password: 1, isDeactivated: 1 })
+    .lean();
 
-  const user = await User.findOne(
-    // { $or: [{ email }, { userName }, { phone }] },
-    { userName },
-    {},
-    { projection: { password: 1 } }
-  );
+  //! If There Was No User :
+  if (!user)
+    return errorResponse(
+      { next },
+      { error: generateMessage("User").errors.notFound.error, status: 404 }
+    );
 
+  //! Incorrect Password :
   if (
     !compareValue({
       plainText: password,
@@ -29,24 +35,34 @@ export const login = asnycHandler(async (req, res, next) => {
     return errorResponse(
       { next },
       {
-        error: errorMsg.error,
-        status: errorMsg.status,
+        error: generateMessage().errors.invalidCredentials.error,
+        status: 400,
       }
     );
 
-  const accessToken = token.generateToken({
+  // If The User Account Was Deactivated :
+  if (user.isDeactivated)
+    await User.findByIdAndUpdate(user._id, {
+      $unset: { isDeactivated: 1 },
+    })
+      .lean()
+      .select({ _id: 1 });
+
+  // Tokens :
+  const accessToken = generateToken({
     payload: { _id: user._id, userName },
     expiresIn: "5d",
   });
-  const refreshToken = token.generateToken({
+  const refreshToken = generateToken({
     payload: { _id: user._id, userName },
     expiresIn: "14d",
   });
+
   return successResponse(
     { res },
     {
-      msg: successMsg.msg,
-      status: successMsg.status,
+      msg: generateMessage("User").success.loggedIn.msg,
+      status: 200,
       data: { accessToken, refreshToken },
     }
   );

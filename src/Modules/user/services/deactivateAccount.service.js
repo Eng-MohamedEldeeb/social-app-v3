@@ -3,15 +3,15 @@ import { asnycHandler } from "../../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../../Utils/Messages/messages.generator.js";
 import { successResponse } from "../../../Utils/Res/success.response.js";
 
-export const togglePrivateProfile = asnycHandler(async (req, res, next) => {
+export const deactivateAccount = asnycHandler(async (req, res, next) => {
   // User Data :
-  const { _id, privateProfile } = req.user;
+  const { _id } = req.user;
 
   // Update User's Profile Pivacy :
   const updateProfile = await User.findByIdAndUpdate(
     _id,
-    { privateProfile: !privateProfile },
-    { lean: true, new: true, projection: "privateProfile" }
+    { isDeactivated: true },
+    { lean: true, new: true, projection: "isDeactivated" }
   );
 
   return successResponse(
