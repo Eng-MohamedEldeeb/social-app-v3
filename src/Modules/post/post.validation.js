@@ -9,7 +9,7 @@ export const getSinglePost = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();
 
@@ -42,7 +42,7 @@ export const editPost = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();
 
@@ -53,7 +53,7 @@ export const archivePost = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();
 
@@ -64,7 +64,7 @@ export const restorePost = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();
 
@@ -75,7 +75,7 @@ export const deletePost = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();
 
@@ -86,6 +86,6 @@ export const postLike = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
   })
   .required();

@@ -8,7 +8,7 @@ export const isAuthenticated = ({ select = "", options = {} } = {}) => {
   return asnycHandler(async (req, res, next) => {
     const { _id } = req.token;
 
-    const user = await User.findById(_id, select, options).lean();
+    const user = await User.findById(_id, select, options);
 
     //! If The User Wasn't Found:
     if (!user) {

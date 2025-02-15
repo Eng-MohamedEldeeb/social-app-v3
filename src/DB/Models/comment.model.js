@@ -29,20 +29,19 @@ const commentSchema = new Schema(
     likedBy: [{ type: Types.ObjectId, ref: "user" }],
 
     owner: { type: Types.ObjectId, ref: "user" },
-    post: { type: Types.ObjectId, ref: "post" },
-    replyingTo: { type: Types.ObjectId, ref: "Comment" },
+    onPost: { type: Types.ObjectId, ref: "post" },
+    onComment: { type: Types.ObjectId, ref: "comment" },
   },
   {
     timestamps: true,
-    versionKey: false,
   }
 );
 
 commentSchema.post("findOneAndDelete", async function (doc, next) {
   const commentID = doc._id;
-  await mongoose.models.Comment.deleteMany({ replyingTo: commentID });
+  await mongoose.models.Comment.deleteMany({ onComment: commentID });
 });
 
-const Comment = mongoose.models.Comment || model("comment", commentSchema);
+const Comment = model("comment", commentSchema);
 
 export default Comment;

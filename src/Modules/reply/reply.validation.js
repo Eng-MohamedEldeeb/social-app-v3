@@ -8,8 +8,8 @@ export const getSingleReply = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
     replyID: generalFields.id.required(),
   })
   .required();
@@ -21,8 +21,8 @@ export const addReply = joi
     content: generalFields.content.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
     // Token:
     ["authorization"]: generalFields.token.required(),
   })
@@ -39,8 +39,8 @@ export const editReply = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
     replyID: generalFields.id.required(),
   })
   .required();
@@ -52,8 +52,8 @@ export const deleteReply = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
     replyID: generalFields.id.required(),
   })
   .required();
@@ -66,8 +66,8 @@ export const replyLike = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
     replyID: generalFields.id.required(),
   })
   .required();

@@ -14,14 +14,13 @@ export const postAuthentication = ({
   archivedField = false,
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { postID } = { ...req.params, ...req.query };
+    const { postId } = { ...req.params, ...req.query };
 
     // Search For The Requseted Post :
-    const postData = await Post.findOne(
-      { _id: postID, isArchived: { $exists: archivedField } },
-      select,
-      options
-    );
+    const postData = await Post.findOne({
+      _id: postId,
+    });
+    console.log(postData);
 
     //! If The Post Wasn't Found :
     if (!postData)

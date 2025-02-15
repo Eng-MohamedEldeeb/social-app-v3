@@ -1,17 +1,34 @@
+// Routers :
 import { Router } from "express";
-import * as commentService from "./service/comment.service.js";
+import replyRouter from "../reply/replie.controller.js";
+
+// Services :
+import {
+  getPostComments,
+  getSingleComment,
+} from "./service/commentGet.service.js";
+import { addComment } from "./service/addComment.service.js";
+import { editComment } from "./service/editComment.service.js";
+import { deleteComment } from "./service/deleteComment.service.js";
+import { commentLike } from "./service/commentLike.service.js";
+
+// Selection :
 import * as commentSelection from "./comment.select.js";
+
+// Validators :
 import * as commentValidators from "./comment.validation.js";
-import { fileReader } from "../../Utils/Upload/fileReader.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { commentAuthentication } from "../../Middlewares/comment/commentAuthentication.js";
 import { commentAuthorization } from "../../Middlewares/comment/commentAuthorization.js";
-import replyRouter from "../reply/replie.controller.js";
+
+// Files :
+import { fileReader } from "../../Utils/Upload/fileReader.js";
+import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
+
 const router = Router({ mergeParams: true });
 
 router.use(
-  "/:commentID/replies",
+  "/:commentId/replies",
   commentAuthentication({
     options: commentSelection.replyRouter.commentAuthentication.projection,
   }),
@@ -23,16 +40,16 @@ router.use(
  * @link /
  * @description GET All Post's Comments
  **/
-router.get("/all", commentService.getPostComments);
+router.get("/all", getPostComments);
 
 /**
  * @method GET
- * @link /comment/:commentID
- * @param /:commentID
+ * @link /comment/:commentId
+ * @param /:commentId
  * @description GET Single Comment
  **/
 router.get(
-  "/:commentID",
+  "/:commentId",
   validation({
     schema: commentValidators.getSingleComment,
     token: "authorization",
@@ -45,7 +62,7 @@ router.get(
         commentSelection.getSingleComment.commentAuthentication.populate,
     },
   }),
-  commentService.getSingleComment
+  getSingleComment
 );
 
 /**
@@ -60,17 +77,17 @@ router.post(
     schema: commentValidators.addComment,
     token: "authorization",
   }),
-  commentService.addComment
+  addComment
 );
 
 /**
  * @method PUT
- * @link /comment/edit/:commentID
- * @param /:commentID
+ * @link /comment/edit/:commentId
+ * @param /:commentId
  * @description Edit Comment
  **/
 router.put(
-  "/edit/:commentID",
+  "/edit/:commentId",
   commentAuthentication({
     options: {
       projection: commentSelection.editComment.commentAuthentication.projection,
@@ -81,17 +98,17 @@ router.put(
     schema: commentValidators.editComment,
     token: "authorization",
   }),
-  commentService.editComment
+  editComment
 );
 
 /**
  * @method DELETE
- * @link /comment/permanent-delete/:commentID
- * @param /:commentID
+ * @link /comment/permanent-delete/:commentId
+ * @param /:commentId
  * @description Delete Comment
  **/
 router.delete(
-  "/permanent-delete/:commentID",
+  "/permanent-delete/:commentId",
   commentAuthentication({
     options: {
       projection:
@@ -103,17 +120,17 @@ router.delete(
     schema: commentValidators.deleteComment,
     token: "authorization",
   }),
-  commentService.deleteComment
+  deleteComment
 );
 
 /**
  * @method POST
- * @link /comment/like-Unlike/:commentID
- * @param /:commentID
+ * @link /comment/like-Unlike/:commentId
+ * @param /:commentId
  * @description Like Or Unlike Comment
  **/
 router.post(
-  "/like-Unlike/:commentID",
+  "/like-Unlike/:commentId",
   commentAuthentication({
     options: {
       projection: commentSelection.commentLike.commentAuthentication.projection,
@@ -123,7 +140,7 @@ router.post(
     schema: commentValidators.commentLike,
     token: "authorization",
   }),
-  commentService.commentLike
+  commentLike
 );
 
 export default router;

@@ -1,15 +1,32 @@
+// Routers :
 import { Router } from "express";
-import * as postService from "./service/post.service.js";
+import commentRouter from "./../comment/comment.controller.js";
+
+// Services :
+import { getAllPosts, getSinglePost } from "./service/getPosts.service.js";
+import { addPost } from "./service/addPost.service.js";
+import { editPost } from "./service/editPost.service.js";
+import { archivePost } from "./service/archivePost.service.js";
+import { restorePost } from "./service/restorePost.service.js";
+import { deletePost } from "./service/deletePost.service.js";
+import { postLike } from "./service/postLike.service.js";
+
+// Selections :
 import * as postSelection from "./post.select.js";
+
+// Validators :
 import * as postValidators from "./post.validation.js";
-import { fileReader } from "../../Utils/Upload/fileReader.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { validation } from "../../Utils/Validation/validation.js";
+
+// Authorizations L
 import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
 import { postAuthentication } from "../../Middlewares/post/postAuthentication.js";
 import { postAuthorization } from "../../Middlewares/post/postAuthorization.js";
-import commentRouter from "./../comment/comment.controller.js";
+
+// Files :
+import { fileReader } from "../../Utils/Upload/fileReader.js";
+import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
 const router = Router();
 
@@ -18,7 +35,7 @@ const router = Router();
  * @description Route To Comments Router
  **/
 router.use(
-  "/:postID/comments",
+  "/:postId/comments",
   isAuthorized,
   isAuthenticated({
     options: {
@@ -45,7 +62,7 @@ router.get(
   isAuthenticated({
     options: { projection: postSelection.addPost.projection },
   }),
-  postService.getAllPosts
+  getAllPosts
 );
 
 /**
@@ -55,25 +72,21 @@ router.get(
  * @description GET Single Post
  **/
 router.get(
-  "/:postID",
+  "/:postId",
   validation({
     schema: postValidators.getSinglePost,
     token: "authorization",
   }),
   isAuthorized,
   isAuthenticated({
-    options: {
-      projection: postSelection.getSinglePost.isAuthenticated.projection,
-    },
+    options: {},
   }),
   postAuthentication({
     archivedField: false,
-    options: {
-      populate: postSelection.getSinglePost.postAuthentication.populate,
-    },
+    options: {},
   }),
 
-  postService.getSinglePost
+  getSinglePost
 );
 
 /**
@@ -92,7 +105,7 @@ router.post(
     schema: postValidators.addPost,
     token: "authorization",
   }),
-  postService.addPost
+  addPost
 );
 
 /**
@@ -118,7 +131,7 @@ router.patch(
     schema: postValidators.editPost,
     token: "authorization",
   }),
-  postService.editPost
+  editPost
 );
 
 /**
@@ -146,7 +159,7 @@ router.delete(
     schema: postValidators.archivePost,
     token: "authorization",
   }),
-  postService.archivePost
+  archivePost
 );
 
 /**
@@ -174,7 +187,7 @@ router.put(
     schema: postValidators.restorePost,
     token: "authorization",
   }),
-  postService.restorePost
+  restorePost
 );
 
 /**
@@ -202,7 +215,7 @@ router.delete(
     schema: postValidators.deletePost,
     token: "authorization",
   }),
-  postService.deletePost
+  deletePost
 );
 
 /**
@@ -229,7 +242,7 @@ router.post(
     schema: postValidators.postLike,
     token: "authorization",
   }),
-  postService.postLike
+  postLike
 );
 
 export default router;

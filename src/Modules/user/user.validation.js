@@ -4,19 +4,19 @@ import { generalFields } from "../../Utils/Validation/validators/general.fields.
 export const getUserProfile = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 export const getUserFollowers = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 export const getUserFollowing = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 
@@ -24,7 +24,7 @@ export const getUserFollowing = joi
 export const followUser = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 
@@ -32,7 +32,7 @@ export const followUser = joi
 export const unfollowUser = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 
@@ -40,7 +40,7 @@ export const unfollowUser = joi
 export const blockUser = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 
@@ -48,7 +48,7 @@ export const blockUser = joi
 export const unblockUser = joi
   .object()
   .keys({
-    userID: generalFields.id.required(),
+    userId: generalFields.id.required(),
   })
   .required();
 

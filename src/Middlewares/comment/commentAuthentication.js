@@ -8,10 +8,11 @@ export const commentAuthentication = ({
   options = { projection, populate },
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { commentID } = { ...req.params, ...req.query };
+    const { commentId } = { ...req.params, ...req.query };
 
     // Search For The Requseted Comment :
-    const commentData = await Comment.findById(commentID, select, options);
+    const commentData = await Comment.findById(commentId, select, options);
+    console.log(commentData);
 
     //! If The Comment Wasn't Found :
     if (!commentData)

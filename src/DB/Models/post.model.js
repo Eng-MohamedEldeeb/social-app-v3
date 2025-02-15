@@ -70,6 +70,6 @@ postSchema.post("findOneAndDelete", async function (doc, next) {
   await Comment.deleteMany({ post: postID });
 });
 
-const Post = mongoose.models.Post || model("post", postSchema);
+const Post = model("post", postSchema);
 
 export default Post;

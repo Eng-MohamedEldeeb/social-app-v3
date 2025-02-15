@@ -152,8 +152,6 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
-    // id: false,
-    versionKey: false,
   }
 );
 

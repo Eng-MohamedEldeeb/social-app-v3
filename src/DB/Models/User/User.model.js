@@ -22,6 +22,6 @@ userSchema.pre("findOneAndUpdate", pre_findOneAndUpdate);
 userSchema.post("findOneAndDelete", post_findOneAndDelete);
 
 // Model Definetion :
-const User = mongoose.models.User || model("user", userSchema);
+const User = model("user", userSchema);
 
 export default User;

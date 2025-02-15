@@ -1,14 +1,27 @@
+// Router :
 import { Router } from "express";
-import * as authService from "./service/auth.service.js";
+
+// Services :
+import { confirmEmail } from "./service/confirmEmail.service.js";
+import { register } from "./service/register.service.js";
+import { login } from "./service/login.service.js";
+import { forgotPassword } from "./service/forgotPassword.service.js";
+import { resetPassword } from "./service/resetPassword.service.js";
+
+// Selection :
 import * as authSelection from "./auth.select.js";
+
+// Validators :
 import * as authValidators from "./auth.validation.js";
 import { isExisted } from "../../Middlewares/auth/isExisted.js";
 import { validation } from "../../Utils/Validation/validation.js";
-import { fileReader } from "../../Utils/Upload/fileReader.js";
-import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
 import { otpTypes } from "../../DB/Options/field.validation.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
+
+// Files :
+import { fileReader } from "../../Utils/Upload/fileReader.js";
+import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 
 const router = Router();
 
@@ -21,7 +34,7 @@ router.post(
   "/confirm-email",
   validation({ schema: authValidators.confirmEmail, token: false }),
   isExisted({ options: { projection: authSelection.confirmEmail.projection } }),
-  authService.confirmEmail
+  confirmEmail
 );
 
 /**
@@ -41,7 +54,7 @@ router.post(
     otpType: otpTypes.confirmation,
     otpFieldName: "registeration",
   }),
-  authService.register
+  register
 );
 
 /**
@@ -52,7 +65,7 @@ router.post(
 router.post(
   "/login",
   validation({ schema: authValidators.login, token: false }),
-  authService.login
+  login
 );
 
 /**
@@ -66,7 +79,7 @@ router.post(
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
   }),
-  authService.forgotPassword
+  forgotPassword
 );
 
 /**
@@ -88,7 +101,7 @@ router.put(
   isAuthenticated({
     options: { projection: authSelection.resetPassword.projection },
   }),
-  authService.resetPassword
+  resetPassword
 );
 
 export default router;

@@ -9,6 +9,25 @@ import { fileReader } from "../../Utils/Upload/fileReader.js";
 import { fileTypes } from "../../Utils/Upload/Cloudinary/Config/uploading.options.js";
 import { validateOTP } from "../../Middlewares/auth/validateOTP.js";
 import { otpTypes } from "../../DB/Options/field.validation.js";
+import {
+  getProfile,
+  getProfileFollowers,
+  getProfileFollowing,
+} from "./services/getProfile.service.js";
+import { togglePrivateProfile } from "./services/privateProfile.service.js";
+import {
+  confirmDeleteProfile,
+  deleteProfile,
+} from "./services/deleteProfile.service.js";
+import { twoStepsVerification } from "./services/twoStepsVerification.service.js";
+import {
+  confirmNewEmail,
+  updateProfile,
+} from "./services/updateProfile.service.js";
+import {
+  changePassword,
+  confirmNewPassword,
+} from "./services/changePassword.service.js";
 
 const router = Router();
 
@@ -26,7 +45,7 @@ router.get(
       populate: profileSelection.getProfile.populate,
     },
   }),
-  profileService.getProfile
+  getProfile
 ); //✅
 
 /**
@@ -40,7 +59,7 @@ router.get(
   isAuthenticated({
     options: { projection: profileSelection.getProfileFollowers.projection },
   }),
-  profileService.getProfileFollowers
+  getProfileFollowers
 ); //✅
 
 /**
@@ -54,7 +73,7 @@ router.get(
   isAuthenticated({
     options: { projection: profileSelection.getProfileFollowing.projection },
   }),
-  profileService.getProfileFollowing
+  getProfileFollowing
 ); //✅
 /**
  * @method PATCH
@@ -67,7 +86,7 @@ router.put(
   isAuthenticated({
     options: { projection: profileSelection.togglePrivateProfile.projection },
   }),
-  profileService.togglePrivateProfile
+  togglePrivateProfile
 ); //✅
 
 /**
@@ -85,7 +104,7 @@ router.post(
   isAuthenticated({
     options: { projection: profileSelection.deleteProfile.projection },
   }),
-  profileService.deleteProfile
+  deleteProfile
 );
 
 /**
@@ -104,7 +123,7 @@ router.delete(
     token: "authorization",
     otp: "confirmation-code",
   }),
-  profileService.confirmDeleteProfile
+  confirmDeleteProfile
 );
 
 /**
@@ -122,7 +141,7 @@ router.put(
   isAuthenticated({
     options: { projection: profileSelection.confirmNewEmail.projection },
   }),
-  profileService.twoStepsVerification
+  twoStepsVerification
 );
 /**
  * @method PATCH
@@ -140,7 +159,7 @@ router.patch(
   isAuthenticated({
     options: { projection: profileSelection.updateProfile.projection },
   }),
-  profileService.updateProfile
+  updateProfile
 ); //✅
 
 /**
@@ -163,7 +182,7 @@ router.put(
     otpType: otpTypes.confirmNewEmail,
     otpFieldName: "confirmation-code",
   }),
-  profileService.confirmNewEmail
+  confirmNewEmail
 ); //✅
 
 /**
@@ -177,7 +196,7 @@ router.post(
   isAuthenticated({
     options: { projection: profileSelection.changePassword.projection },
   }),
-  profileService.changePassword
+  changePassword
 ); //✅
 
 /**
@@ -195,7 +214,7 @@ router.put(
   isAuthenticated({
     options: { projection: profileSelection.confirmNewPassword.projection },
   }),
-  profileService.confirmNewPassword
+  confirmNewPassword
 ); //✅
 
 export default router;

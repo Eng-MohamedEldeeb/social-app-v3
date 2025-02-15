@@ -1,13 +1,29 @@
+// Routers :
 import { Router } from "express";
-import * as userService from "./services/user.service.js";
+import profileRouter from "./../profile/profile.controller.js";
+
+// Services :
+import { groupAuthentication } from "../../Middlewares/group/groupAuthentication.js";
+import {
+  getUserFollowers,
+  getUserFollowing,
+  getUserProfile,
+} from "./services/getUserProfile.service.js";
+import { followUser, unfollowUser } from "./services/userFollowing.service.js";
+import { blockUser, unblockUser } from "./services/userBlocking.service.js";
+import { groupJoin } from "./services/groupJoin.service.js";
+
+// Selections :
 import * as userSelection from "./user.select.js";
+
+// Validators :
 import * as userValidation from "./user.validation.js";
+import { validation } from "../../Utils/Validation/validation.js";
+
+// Authorizations :
 import { isAuthorized } from "../../Middlewares/auth/isAuthorized.js";
 import { isAuthenticated } from "../../Middlewares/auth/isAuthenticated.js";
-import { validation } from "../../Utils/Validation/validation.js";
 import { userAuthentication } from "../../Middlewares/user/userAuthentication.js";
-import profileRouter from "./../profile/profile.controller.js";
-import { groupAuthentication } from "../../Middlewares/group/groupAuthentication.js";
 
 const router = Router();
 
@@ -19,7 +35,7 @@ router.use("/profile", profileRouter);
  * @description Get User's Own Following
  **/
 router.get(
-  "/:userID/profile",
+  "/:userId/profile",
   validation({ schema: userValidation.getUserProfile }),
   isAuthorized,
   isAuthenticated({
@@ -32,7 +48,7 @@ router.get(
       projection: userSelection.getUserProfile.projection.userAuthentication,
     },
   }),
-  userService.getUserProfile
+  getUserProfile
 ); //✅
 
 /**
@@ -41,7 +57,7 @@ router.get(
  * @description Get User's Own Following
  **/
 router.get(
-  "/:userID/followers",
+  "/:userId/followers",
   validation({ schema: userValidation.getUserFollowers }),
   isAuthorized,
   isAuthenticated({
@@ -54,7 +70,7 @@ router.get(
       projection: userSelection.getUserFollowers.projection.userAuthentication,
     },
   }),
-  userService.getUserFollowers
+  getUserFollowers
 ); //✅
 
 /**
@@ -63,7 +79,7 @@ router.get(
  * @description Get User's Own Following
  **/
 router.get(
-  "/:userID/following",
+  "/:userId/following",
   validation({ schema: userValidation.getUserFollowing }),
   isAuthorized,
   isAuthenticated({
@@ -76,17 +92,17 @@ router.get(
       projection: userSelection.getUserFollowing.projection.userAuthentication,
     },
   }),
-  userService.getUserFollowing
+  getUserFollowing
 ); //✅
 
 /**
  * @method POST
  * @link /user/follow
  * @description Follow User
- * @param /follow/:userID
+ * @param /follow/:userId
  **/
 router.post(
-  "/follow/:userID",
+  "/follow/:userId",
   validation({
     schema: userValidation.followUser,
   }),
@@ -94,17 +110,17 @@ router.post(
   isAuthenticated({
     options: { projection: userSelection.followUser.projection },
   }),
-  userService.followUser
+  followUser
 ); //✅
 
 /**
  * @method DELETE
  * @link /user/unfollow
  * @description Unfollow User
- * @param /unfollow/:userID
+ * @param /unfollow/:userId
  **/
 router.delete(
-  "/unfollow/:userID",
+  "/unfollow/:userId",
   validation({
     schema: userValidation.unfollowUser,
   }),
@@ -112,17 +128,17 @@ router.delete(
   isAuthenticated({
     options: { projection: userSelection.unfollowUser.projection },
   }),
-  userService.unfollowUser
+  unfollowUser
 ); //✅
 
 /**
  * @method POST
  * @link /user/block
  * @description Block User
- * @param /block/:userID
+ * @param /block/:userId
  **/
 router.post(
-  "/block/:userID",
+  "/block/:userId",
   validation({
     schema: userValidation.blockUser,
   }),
@@ -130,17 +146,17 @@ router.post(
   isAuthenticated({
     options: { projection: userSelection.blockUser.projection },
   }),
-  userService.blockUser
+  blockUser
 ); //✅
 
 /**
  * @method DELETE
  * @link /user/unblock
  * @description Unblock User
- * @param /unblock/:userID
+ * @param /unblock/:userId
  **/
 router.delete(
-  "/unblock/:userID",
+  "/unblock/:userId",
   validation({
     schema: userValidation.unblockUser,
   }),
@@ -148,14 +164,14 @@ router.delete(
   isAuthenticated({
     options: { projection: userSelection.unblockUser.projection },
   }),
-  userService.unblockUser
+  unblockUser
 ); //✅
 
 /**
  * @method POST
  * @link /user/block
  * @description Block User
- * @param /block/:userID
+ * @param /block/:userId
  **/
 router.post(
   "/group/join-unjoin/:id",
@@ -167,6 +183,6 @@ router.post(
     options: { projection: userSelection.groupJoin.projection },
   }),
   groupAuthentication(),
-  userService.groupJoin
+  groupJoin
 ); //✅
 export default router;

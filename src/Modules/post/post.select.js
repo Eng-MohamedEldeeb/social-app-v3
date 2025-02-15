@@ -12,18 +12,18 @@ export const commentRouter = {
   },
 };
 
-// Get Single Post Selection :
-export const getSinglePost = {
-  isAuthenticated: { projection: { _id: 1 } },
-  postAuthentication: {
-    populate: {
-      path: "owner",
-      select: {
-        userName: 1,
-      },
-    },
-  },
-};
+// // Get Single Post Selection :
+// export const getSinglePost = {
+//   isAuthenticated: { projection: { _id: 1 } },
+//   postAuthentication: {
+//     populate: {
+//       path: "owner",
+//       select: {
+//         userName: 1,
+//       },
+//     },
+//   },
+// };
 
 // Add Post Selection :
 export const addPost = {

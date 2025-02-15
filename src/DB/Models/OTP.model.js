@@ -58,6 +58,6 @@ optSchema.pre("save", function (next) {
   return next();
 });
 
-const OTP = mongoose.models.otp || model("otp", optSchema);
+const OTP = model("otp", optSchema);
 
 export default OTP;

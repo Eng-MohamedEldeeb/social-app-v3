@@ -9,8 +9,8 @@ export const getSingleComment = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
   })
   .required();
 
@@ -27,7 +27,7 @@ export const addComment = joi
     content: generalFields.content,
 
     // Params:
-    postID: generalFields.id.required(),
+    postId: generalFields.id.required(),
 
     // Token:
     ["authorization"]: generalFields.token.required(),
@@ -45,8 +45,8 @@ export const editComment = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
   })
   .required();
 
@@ -57,8 +57,8 @@ export const deleteComment = joi
     // Token:
     ["authorization"]: generalFields.token.required(),
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
   })
   .required();
 
@@ -70,7 +70,7 @@ export const commentLike = joi
     ["authorization"]: generalFields.token.required(),
 
     // Params:
-    postID: generalFields.id.required(),
-    commentID: generalFields.id.required(),
+    postId: generalFields.id.required(),
+    commentId: generalFields.id.required(),
   })
   .required();

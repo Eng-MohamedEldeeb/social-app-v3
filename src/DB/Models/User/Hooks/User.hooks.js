@@ -77,7 +77,7 @@ export const post_findOneAndDelete = async function (doc, next) {
   )
     await cloud.uploader.destroy(profilePicture.public_id);
 
-  Promise.allSettled([
+  await Promise.allSettled([
     Post.deleteMany(userData),
     Comment.deleteMany(userData),
     OTP.findOneAndDelete({ email: doc.email }),

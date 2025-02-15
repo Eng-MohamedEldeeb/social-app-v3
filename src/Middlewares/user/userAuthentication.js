@@ -8,8 +8,8 @@ export const userAuthentication = ({
   options = { projection, populate },
 } = {}) => {
   return asnycHandler(async (req, res, next) => {
-    const { userID } = { ...req.params, ...req.query };
-    const user = await User.findById({ _id: userID }, select, options).lean();
+    const { userId } = { ...req.params, ...req.query };
+    const user = await User.findById({ _id: userId }, select, options);
 
     //! If The User Wasn't Found:
     if (!user)

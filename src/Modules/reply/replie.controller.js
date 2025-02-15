@@ -1,6 +1,17 @@
+// Router :
 import { Router } from "express";
-import * as replyService from "./service/reply.service.js";
-import * as replySelection from "./reply.select.js";
+
+// Services :
+import {
+  getCommentReplies,
+  getSingleReply,
+} from "./service/getReply.service.js";
+import { addReply } from "./service/addReply.service.js";
+import { editReply } from "./service/editReply.service.js";
+import { deleteReply } from "./service/deleteReply.service.js";
+import { replyLike } from "./service/replyLike.service.js";
+
+// Validators :
 import * as replyValidators from "./reply.validation.js";
 import { validation } from "../../Utils/Validation/validation.js";
 import { replyAuthentication } from "../../Middlewares/reply/replyAuthentication.js";
@@ -13,7 +24,7 @@ const router = Router({ mergeParams: true });
  * @link /
  * @description GET All Comment's Replies
  **/
-router.get("/all", replyService.getCommentReplies);
+router.get("/all", getCommentReplies);
 
 /**
  * @method GET
@@ -33,7 +44,7 @@ router.get(
       populate: replySelection.getSingleReply.replyAuthentication.populate,
     },
   }),
-  replyService.getSingleReply
+  getSingleReply
 );
 
 /**
@@ -47,7 +58,7 @@ router.post(
     schema: replyValidators.addReply,
     token: "authorization",
   }),
-  replyService.addReply
+  addReply
 );
 
 /**
@@ -68,7 +79,7 @@ router.put(
     schema: replyValidators.editReply,
     token: "authorization",
   }),
-  replyService.editReply
+  editReply
 );
 
 /**
@@ -89,7 +100,7 @@ router.delete(
     schema: replyValidators.deleteReply,
     token: "authorization",
   }),
-  replyService.deleteReply
+  deleteReply
 );
 
 /**
@@ -109,7 +120,7 @@ router.post(
     schema: replyValidators.replyLike,
     token: "authorization",
   }),
-  replyService.replyLike
+  replyLike
 );
 
 export default router;

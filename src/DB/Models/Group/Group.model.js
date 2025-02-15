@@ -12,6 +12,6 @@ import { post_findOneAndDelete } from "./Hooks/Group.hooks.js";
 groupSchema.post("findOneAndDelete", post_findOneAndDelete);
 
 // Model Definetion :
-const Group = mongoose.models.Group || model("group", groupSchema);
+const Group = model("group", groupSchema);
 
 export default Group;

@@ -12,7 +12,7 @@ export const replyAuthentication = ({
 
     // Search For The Requseted Reply :
     const replyData = await Comment.findOne(
-      { replyingTo: replyID },
+      { onComment: replyID },
       select,
       options
     );

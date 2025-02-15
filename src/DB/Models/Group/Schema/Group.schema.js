@@ -82,7 +82,6 @@ const groupSchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: false,
   }
 );
 
