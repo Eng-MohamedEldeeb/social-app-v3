@@ -13,7 +13,36 @@ export const groupJoin = asnycHandler(async (req, res, next) => {
   const { _id: userId } = req.user;
 
   // Group Data :
-  const { creator, members, admins } = req.group;
+  const { creator, members, admins, privateGroup, requests } = req.group;
+
+  // If The Joined Group Is Private :
+  if (privateGroup) {
+    // Check If The User Already Requested To Follow User :
+    const checkRequests = requests.some((req) => req.equals(userId));
+
+    const data = await Group.findByIdAndUpdate(
+      groupId,
+      {
+        ...(checkRequests
+          ? {
+              $pull: { requests: userId },
+            }
+          : {
+              $addToSet: { requests: userId },
+            }),
+      },
+      { lean: true, new: true, projection: { requests: 1 } }
+    );
+
+    return successResponse(
+      { res },
+      {
+        msg: "Request Sent Successfully",
+        status: 200,
+        data,
+      }
+    );
+  }
 
   // Check If The User Was The Group Creator :
   //! If The User Was The Creator :
@@ -51,13 +80,6 @@ export const groupJoin = asnycHandler(async (req, res, next) => {
     },
     { lean: true, new: true, projection: { members: 1 } }
   );
-
-  //! If The Group Wasn't Found :
-  if (!data)
-    return errorResponse(
-      { next },
-      { error: generateMessage("Group").errors.notFound.error, status: 404 }
-    );
 
   const updatedUser = await User.findOneAndUpdate(
     { _id: userId, isDeactivated: { $exists: false } },

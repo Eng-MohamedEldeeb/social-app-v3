@@ -3,10 +3,7 @@ import { asnycHandler } from "../../Utils/Errors/asyncHandler.js";
 import { generateMessage } from "../../Utils/Messages/messages.generator.js";
 import { errorResponse } from "../../Utils/Res/error.response.js";
 
-export const userAuthentication = ({
-  select = "",
-  options = { projection, populate },
-} = {}) => {
+export const userAuthentication = ({ select = {}, options = {} } = {}) => {
   return asnycHandler(async (req, res, next) => {
     const { userId } = { ...req.params, ...req.query };
     const user = await User.findById(
@@ -24,7 +21,6 @@ export const userAuthentication = ({
           status: generateMessage("User").errors.notFound.status,
         }
       );
-    console.log();
 
     //! If The User Was In The Block List:
     if (
@@ -49,29 +45,7 @@ export const userAuthentication = ({
         }
       );
 
-    //? If The User's Profile Is Private:
-    if (user.privateProfile) {
-      const {
-        // fullName,
-        userName,
-        avatar,
-        privateProfile,
-        followers,
-        following,
-requests,
-      } = user;
-      req.searchedUser = {
-        userName,
-        avatar,
-        privateProfile,
-        followers: followers.length,
-        following: following.length,
-requests
-      };
-      return next();
-    }
-    const { blockList, ...rest } = user;
-    req.searchedUser = rest;
+    req.searchedUser = user;
     return next();
   });
 };

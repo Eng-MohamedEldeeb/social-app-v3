@@ -24,7 +24,7 @@ export const getUserFollowing = joi
   .required();
 
 // [Follow User]:
-export const followUser = joi
+export const userFollowing = joi
   .object()
   .keys({
     ["authorization"]: generalFields.token.required(),
@@ -33,7 +33,7 @@ export const followUser = joi
   .required();
 
 // Unfollow User:
-export const unfollowUser = joi
+export const unuserFollowing = joi
   .object()
   .keys({
     ["authorization"]: generalFields.token.required(),

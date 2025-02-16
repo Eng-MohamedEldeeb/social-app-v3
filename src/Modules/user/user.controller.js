@@ -9,7 +9,7 @@ import {
   getUserFollowing,
   getUserProfile,
 } from "./services/getUserProfile.service.js";
-import { followUser, unfollowUser } from "./services/userFollowing.service.js";
+import { userFollowing } from "./services/userFollowing.service.js";
 import { blockUser, unblockUser } from "./services/userBlocking.service.js";
 import { groupJoin } from "./services/groupJoin.service.js";
 import {
@@ -164,31 +164,16 @@ router.get(
 router.post(
   "/follow/:userId",
   validation({
-    schema: userValidation.followUser,
+    schema: userValidation.userFollowing,
   }),
   isAuthorized,
   isAuthenticated({
-    options: { projection: userSelection.followUser.projection },
+    select: userSelection.userFollowing.isAuthenticated.select,
   }),
-  followUser
-); //✅
-
-/**
- * @method DELETE
- * @link /user/unfollow
- * @description Unfollow User
- * @param /unfollow/:userId
- **/
-router.delete(
-  "/unfollow/:userId",
-  validation({
-    schema: userValidation.unfollowUser,
+  userAuthentication({
+    select: userSelection.userFollowing.userAuthentication.select,
   }),
-  isAuthorized,
-  isAuthenticated({
-    options: { projection: userSelection.unfollowUser.projection },
-  }),
-  unfollowUser
+  userFollowing
 ); //✅
 
 /**

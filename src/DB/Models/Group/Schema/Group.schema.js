@@ -77,11 +77,11 @@ const groupSchema = new Schema(
     // Members :
     members: [{ type: Types.ObjectId, ref: "user" }],
 
-// Group Privacy :
-isPrivate : Boolean,
+    // Group Privacy :
+    privateGroup: Boolean,
 
-// Group Requests :
-requests: {[type: Types.ObjectId, ref: "user"]}
+    // Group Requests :
+    requests: [{ type: Types.ObjectId, ref: "user" }],
   },
   {
     timestamps: true,

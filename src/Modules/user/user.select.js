@@ -41,18 +41,26 @@ export const getUserFollowing = {
 };
 
 // Follow User:
-export const followUser = {
-  projection: {
-    _id: 1,
-    following: 1,
-    isDeactivated: 1,
-isPrivate: 1,
-requests: 1,
+export const userFollowing = {
+  isAuthenticated: {
+    select: {
+      _id: 1,
+      following: 1,
+      isDeactivated: 1,
+      blockList: 1,
+      following: 1,
+    },
+  },
+  userAuthentication: {
+    select: {
+      password: 0,
+      passwords: 0,
+    },
   },
 };
 
 // UnFollow User:
-export const unfollowUser = {
+export const unuserFollowing = {
   projection: {
     _id: 1,
     following: 1,

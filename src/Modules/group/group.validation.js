@@ -28,6 +28,7 @@ export const createGroup = joi
       .max(groupNameLength.max)
       .required(),
     groupInfo: joi.string().max(groupInfoLength.max),
+    privateGroup: joi.boolean().valid(true, false).default(false),
 
     // Token Validation :
     ["authorization"]: generalFields.token.required(),

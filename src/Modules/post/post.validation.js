@@ -24,6 +24,7 @@ export const addPost = joi
     }),
     title: generalFields.title,
     content: generalFields.content,
+    allowComments: joi.boolean().valid(true, false).default(true),
 
     // Group Id :
     groupId: generalFields.id,

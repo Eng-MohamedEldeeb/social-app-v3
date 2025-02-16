@@ -7,7 +7,7 @@ import { successResponse } from "../../../../Utils/Res/success.response.js";
 
 export const createGroup = asnycHandler(async (req, res, next) => {
   // Group Info:
-  const { groupName, groupInfo } = req.body;
+  const groupData = req.body;
 
   // User Role:
   const { role } = req.user;
@@ -24,8 +24,7 @@ export const createGroup = asnycHandler(async (req, res, next) => {
 
   // If The User Was Allowed To Create a Group:
   const data = await Group.create({
-    groupName,
-    groupInfo,
+    ...groupData,
     creator: req.user._id,
   });
 
@@ -35,16 +34,6 @@ export const createGroup = asnycHandler(async (req, res, next) => {
     { $push: { createdGroups: data._id } },
     { lean: true, new: true, projection: { createdGroups: 1 } }
   );
-
-  //! Check If The Admin Wasn't Updated :
-  if (!adminUpdate)
-    return errorResponse(
-      { next },
-      {
-        error: generateMessage("Admin").errors.notFound.error,
-        status: 404,
-      }
-    );
 
   return successResponse(
     { res },
